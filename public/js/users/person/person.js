@@ -132,7 +132,6 @@ $(document).ready(function () {
         { data: 'name' },
         { data: 'address' },
         { data: 'bday' },
-    
         {
             data: null,
             orderable: false,
