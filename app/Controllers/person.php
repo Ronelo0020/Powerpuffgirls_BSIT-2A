@@ -96,9 +96,7 @@ public function delete($id = null){
     }
 }
 
-
-public function fetchRecords()
-{
+public function fetchRecords(){
     $request = service('request');
     $model = new \App\Models\PersonModel();
 
@@ -123,5 +121,4 @@ public function fetchRecords()
         'data' => $data,
     ]);
 }
-
 }
