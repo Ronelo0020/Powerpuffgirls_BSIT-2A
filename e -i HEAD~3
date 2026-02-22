@@ -1,0 +1,64 @@
+[33mcommit c951353078b2aa1f958fe3103d97988fbff184a3[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author:     Yashie123 <mailenbulahan@gmail.com>
+AuthorDate: Sun Feb 22 12:08:39 2026 +0800
+Commit:     Yashie123 <mailenbulahan@gmail.com>
+CommitDate: Sun Feb 22 12:08:39 2026 +0800
+
+    update Delete functionality for CRUD
+
+[33mcommit 6f7b598772847057bbb542ca341680be5a8b3ec3[m
+Author:     Agusan857 <agusrr597@gmail.com>
+AuthorDate: Sat Feb 21 11:03:47 2026 +0800
+Commit:     Agusan857 <agusrr597@gmail.com>
+CommitDate: Sat Feb 21 11:03:47 2026 +0800
+
+    My local Read updates
+
+[33mcommit 51ae35124f34d3603d4b7e20a482b84403db8f7f[m
+Merge: 4d0c9cf 9222902
+Author:     Agusan857 <agusrr597@gmail.com>
+AuthorDate: Sat Feb 21 10:48:16 2026 +0800
+Commit:     Agusan857 <agusrr597@gmail.com>
+CommitDate: Sat Feb 21 10:48:16 2026 +0800
+
+    Resolved merge conflicts
+
+[33mcommit 4d0c9cf8dc3fb41766355dd3fda406213e051acf[m
+Author:     Agusan857 <agusrr597@gmail.com>
+AuthorDate: Sat Feb 21 10:32:36 2026 +0800
+Commit:     Agusan857 <agusrr597@gmail.com>
+CommitDate: Sat Feb 21 10:32:36 2026 +0800
+
+    My local Read/CRUD updates
+
+[33mcommit 9222902c659f4a7be74ed2ff92e4468087eedd82[m
+Author:     Ronelo <your_github_email@example.com>
+AuthorDate: Mon Feb 16 10:40:06 2026 +0800
+Commit:     Ronelo <your_github_email@example.com>
+CommitDate: Mon Feb 16 10:40:06 2026 +0800
+
+    project
+
+[33mcommit c779d660993a7d713da799534c932dcdd77f892c[m
+Author:     Ronelo0020 <dacilloronelo@gmail.com>
+AuthorDate: Mon Feb 9 10:11:36 2026 +0800
+Commit:     Ronelo0020 <dacilloronelo@gmail.com>
+CommitDate: Mon Feb 9 10:11:36 2026 +0800
+
+    first commit
+
+[33mcommit e4227a33364bbe8d0db3ad245407652ce6ec8ec5[m
+Author:     Ronelo0020 <dacilloronelo@gmail.com>
+AuthorDate: Mon Feb 9 09:54:06 2026 +0800
+Commit:     Ronelo0020 <dacilloronelo@gmail.com>
+CommitDate: Mon Feb 9 09:54:06 2026 +0800
+
+    Powerpuffgirls
+
+[33mcommit d2725686d1bc460397734d9c9e16220d0e0b188f[m
+Author:     Glenn Azuelo <glenn@localhost.localdomain>
+AuthorDate: Fri Feb 6 00:13:56 2026 +0800
+Commit:     Glenn Azuelo <glenn@localhost.localdomain>
+CommitDate: Fri Feb 6 00:13:56 2026 +0800
+
+    Initial COmmit

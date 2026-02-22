@@ -93,9 +93,8 @@ body.dark-mode .main-sidebar .nav-link:hover {
         <p>Activity Logs</p>
       </a>
     </li>
-
     <li class="nav-item">
-      <a href="<?= base_url('person') ?>" class="nav-link <?= is_active(1, 'log') ?>">
+      <a href="<?= base_url('person') ?>" class="nav-link <?= is_active(1, 'person') ?>">
         <i class="nav-icon fas fa-user-friends"></i>
         <p>Person</p>
       </a>

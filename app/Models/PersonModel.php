@@ -9,7 +9,7 @@ class PersonModel extends Model
     protected $table = 'person';
     protected $primaryKey = 'id';
 
-    protected $allowedFields = ['name','bday', ];
+    protected $allowedFields = ['name','bday'];
 
     public function getRecords($start, $length, $searchValue = '')
     {
@@ -18,7 +18,7 @@ class PersonModel extends Model
 
         if (!empty($searchValue)) {
             $builder->groupStart()
-                ->orLike('bday', $searchValue)
+                ->orLike('name', $searchValue)
                 ->groupEnd();
         }
 

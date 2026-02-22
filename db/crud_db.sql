@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1deb1
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost:3306
--- Generation Time: Jul 21, 2025 at 12:33 PM
--- Server version: 10.11.9-MariaDB-0+deb12u1
--- PHP Version: 8.2.26
+-- Host: 127.0.0.1
+-- Generation Time: Feb 22, 2026 at 05:38 AM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `crud_db`
+-- Database: `crud-db2`
 --
 
 -- --------------------------------------------------------
@@ -41,6 +41,31 @@ CREATE TABLE `login_attempts` (
 
 INSERT INTO `login_attempts` (`id`, `email`, `ip_address`, `attempt_time`, `user_agent`) VALUES
 (36, 'glennazuelo1@gmail.com', '::142432432', '2025-04-15 13:15:00', '');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `person`
+--
+
+CREATE TABLE `person` (
+  `id` int(11) NOT NULL,
+  `name` varchar(55) NOT NULL,
+  `address` varchar(100) NOT NULL,
+  `bday` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `person`
+--
+
+INSERT INTO `person` (`id`, `name`, `address`, `bday`) VALUES
+(2, 'Mailen Bulahan Salla Jr.', '', '2005-04-13'),
+(5, 'Irish ann adrias b', '', '2026-02-12'),
+(7, 'Ronelo Mabayag Dacillo', '', '2005-02-28'),
+(8, 'Ronela Dacillo', '', '2005-02-28'),
+(9, 'Raymond Agapor', '', '2004-02-22'),
+(10, 'Ralph romeo Agus Jr.', '', '2026-02-22');
 
 -- --------------------------------------------------------
 
@@ -77,7 +102,35 @@ INSERT INTO `tbl_logs` (`LOGID`, `USERID`, `ACTION`, `DATELOG`, `TIMELOG`, `user
 (10, '1', 'Logout', '2025-07-21', '20:19:56', '::1', 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36', 'Glenn Azuelo', 'LOGOUT'),
 (11, '1', 'Login: Glenn Azuelo', '2025-07-21', '20:21:27', '::1', 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36', 'Glenn Azuelo', 'LOGIN'),
 (12, '1', 'New User has been added: xxx', '2025-07-21', '20:32:39', '::1', 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36', 'Glenn Azuelo', 'ADD'),
-(13, '1', 'Delete user', '2025-07-21', '20:32:44', '::1', 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36', 'Glenn Azuelo', 'DELETED');
+(13, '1', 'Delete user', '2025-07-21', '20:32:44', '::1', 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36', 'Glenn Azuelo', 'DELETED'),
+(14, '1', 'Login: Glenn Azuelo', '2026-02-20', '12:16:11', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Edg/145.0.0.0', 'Glenn Azuelo', 'LOGIN'),
+(15, '1', 'New Person has been added: Ronelo Dacillo Mabayag', '2026-02-20', '12:49:25', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Edg/145.0.0.0', 'Glenn Azuelo', 'ADD'),
+(16, '1', 'New Person has been apdated: Ronelo Dacillo Mabayad', '2026-02-20', '12:49:40', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Edg/145.0.0.0', 'Glenn Azuelo', 'UPDATED'),
+(17, '1', 'New Person has been added: zackiejkashJKHS', '2026-02-20', '13:03:58', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Edg/145.0.0.0', 'Glenn Azuelo', 'ADD'),
+(18, '1', 'Login: Glenn Azuelo', '2026-02-21', '09:36:29', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Edg/145.0.0.0', 'Glenn Azuelo', 'LOGIN'),
+(19, '1', 'New Person has been apdated: Ron', '2026-02-21', '09:37:02', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Edg/145.0.0.0', 'Glenn Azuelo', 'UPDATED'),
+(20, '1', 'Person updated: Ronelo', '2026-02-21', '09:39:04', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Edg/145.0.0.0', 'Glenn Azuelo', 'UPDATED'),
+(21, '1', 'New Person has been added: Ronelo Mabayag Dacillo', '2026-02-21', '10:12:13', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Edg/145.0.0.0', 'Glenn Azuelo', 'ADD'),
+(22, '1', 'New Person has been added: Mailen', '2026-02-21', '10:12:40', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Edg/145.0.0.0', 'Glenn Azuelo', 'ADD'),
+(23, '1', 'Person updated: Mailen Bulahan Salla', '2026-02-21', '10:12:56', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Edg/145.0.0.0', 'Glenn Azuelo', 'UPDATED'),
+(24, '1', 'New Person has been added: lourd', '2026-02-21', '10:15:14', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Edg/145.0.0.0', 'Glenn Azuelo', 'ADD'),
+(25, '1', 'Person updated: lourd ian akol rentino', '2026-02-21', '10:16:05', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Edg/145.0.0.0', 'Glenn Azuelo', 'UPDATED'),
+(26, '1', 'Person deleted: 3', '2026-02-21', '10:16:56', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Edg/145.0.0.0', 'Glenn Azuelo', 'DELETE'),
+(27, '1', 'New Person has been added: Ronelo Mabayag Dacillo', '2026-02-21', '10:20:46', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Edg/145.0.0.0', 'Glenn Azuelo', 'ADD'),
+(28, '1', 'Person deleted ID: 4', '2026-02-21', '10:21:02', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Edg/145.0.0.0', 'Glenn Azuelo', 'DELETE'),
+(29, '1', 'New Person has been added: Irish an', '2026-02-21', '11:05:24', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Edg/145.0.0.0', 'Glenn Azuelo', 'ADD'),
+(30, '1', 'Person updated: Irish ann adrias b', '2026-02-21', '11:05:53', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Edg/145.0.0.0', 'Glenn Azuelo', 'UPDATED'),
+(31, '1', 'Login: Glenn Azuelo', '2026-02-22', '11:14:38', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Edg/145.0.0.0', 'Glenn Azuelo', 'LOGIN'),
+(32, '1', 'New Person has been added: Don romeo Agus', '2026-02-22', '11:15:32', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Edg/145.0.0.0', 'Glenn Azuelo', 'ADD'),
+(33, '1', 'Person updated: Don romeo Agus', '2026-02-22', '11:15:48', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Edg/145.0.0.0', 'Glenn Azuelo', 'UPDATED'),
+(34, '1', 'Person deleted ID: 1', '2026-02-22', '11:16:01', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Edg/145.0.0.0', 'Glenn Azuelo', 'DELETE'),
+(35, '1', 'New Person has been added: Ronelo Mabayag Dacillo', '2026-02-22', '11:16:56', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Edg/145.0.0.0', 'Glenn Azuelo', 'ADD'),
+(36, '1', 'Person deleted ID: 6', '2026-02-22', '11:21:21', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Edg/145.0.0.0', 'Glenn Azuelo', 'DELETE'),
+(37, '1', 'Person updated: Mailen Bulahan Salla Jr.', '2026-02-22', '11:21:37', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Edg/145.0.0.0', 'Glenn Azuelo', 'UPDATED'),
+(38, '1', 'New Person has been added: Ronela Dacillo', '2026-02-22', '11:21:59', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Edg/145.0.0.0', 'Glenn Azuelo', 'ADD'),
+(39, '1', 'New Person has been added: Raymond Agapor', '2026-02-22', '11:22:49', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Edg/145.0.0.0', 'Glenn Azuelo', 'ADD'),
+(40, '1', 'New Person has been added: Ralph romeo Agus Jr.', '2026-02-22', '11:23:46', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Edg/145.0.0.0', 'Glenn Azuelo', 'ADD'),
+(41, '1', 'Login: Glenn Azuelo', '2026-02-22', '12:30:34', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Edg/145.0.0.0', 'Glenn Azuelo', 'LOGIN');
 
 -- --------------------------------------------------------
 
@@ -119,6 +172,12 @@ ALTER TABLE `login_attempts`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `person`
+--
+ALTER TABLE `person`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `tbl_logs`
 --
 ALTER TABLE `tbl_logs`
@@ -143,10 +202,16 @@ ALTER TABLE `login_attempts`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=92;
 
 --
+-- AUTO_INCREMENT for table `person`
+--
+ALTER TABLE `person`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
 -- AUTO_INCREMENT for table `tbl_logs`
 --
 ALTER TABLE `tbl_logs`
-  MODIFY `LOGID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `LOGID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
 
 --
 -- AUTO_INCREMENT for table `users`

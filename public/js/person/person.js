@@ -34,16 +34,14 @@ $('#addUserForm').on('submit', function (e) {
 $(document).on('click', '.edit-btn', function () {
    const userId = $(this).data('id'); 
    $.ajax({
-    url: baseUrl + 'users/edit/' + userId,
+    url: baseUrl + 'person/edit/' + userId,
     method: 'GET',
     dataType: 'json',
     success: function (response) {
         if (response.data) {
             $('#editUserModal #name').val(response.data.name);
             $('#editUserModal #userId').val(response.data.id);
-            $('#editUserModal #address').val(response.data.address);
             $('#editUserModal #bday').val(response.data.bday);
-           
             $('#editUserModal').modal('show');
         } else {
             alert('Error fetching person data');
@@ -61,14 +59,14 @@ $(document).ready(function () {
         e.preventDefault(); 
 
         $.ajax({
-            url: baseUrl + 'users/update',
+            url: baseUrl + 'person/update',
             method: 'POST',
             data: $(this).serialize(),
             dataType: 'json',
             success: function (response) {
                 if (response.success) {
                     $('#editUserModal').modal('hide');
-                    showToast('success', 'User Updated successfully!');
+                    showToast('success', 'Person Updated successfully!');
                     setTimeout(() => location.reload(), 1000);
                 } else {
                     alert('Error updating: ' + (response.message || 'Unknown error'));
@@ -130,7 +128,6 @@ $(document).ready(function () {
         { data: 'row_number' },
         { data: 'id', visible: false },
         { data: 'name' },
-        { data: 'address' },
         { data: 'bday' },
         {
             data: null,

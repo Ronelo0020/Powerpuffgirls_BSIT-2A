@@ -42,7 +42,7 @@ class Database extends Config
             'hostname' => getenv('database.default.hostname') ?: 'localhost',
             'username' => getenv('database.default.username') ?: 'root',
             'password' => getenv('database.default.password') ?: '',
-            'database' => getenv('database.default.database') ?: '',
+            'database' => getenv('database.default.database') ?: 'crud-db2',
             'DBDriver' => getenv('database.default.DBDriver') ?: 'MySQLi',
             'DBPrefix' => '',
             'pConnect' => false,

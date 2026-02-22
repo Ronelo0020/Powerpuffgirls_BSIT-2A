@@ -10,7 +10,7 @@ use App\Models\PersonModel;
 class Person extends Controller
 {
     public function index(){
-        $model = new UserModel();
+        $model = new PersonModel();
         $data['person'] = $model->findAll();
         return view('person/index', $data);
     }
@@ -19,61 +19,34 @@ class Person extends Controller
         $name = $this->request->getPost('name');
         $bday = $this->request->getPost('bday');
 
-      
-
-        $userModel = new \App\Models\UserModel();
+        $userModel = new \App\Models\PersonModel();
         $logModel = new LogModel();
-
-    
 
         $data = [
             'name'       => $name,
-            'bday'      => $bday,
-           
+            'bday'      => $bday
         ];
 
-        if ($userModel->insert($data)) {
-            $logModel->addLog('New User has been added: ' . $name, 'ADD');
+        if ($userModel->insert($data) !== false) {
+            $logModel->addLog('New Person has been added: ' . $name, 'ADD');
             return $this->response->setJSON(['status' => 'success']);
         } else {
-            return $this->response->setJSON(['status' => 'error', 'message' => 'Failed to save user']);
+            return $this->response->setJSON(['status' => 'error', 'message' => 'Failed to save person']);
         }
     }
 
+
     public function update(){
-        $model = new PersonModel();
+        $model = new UserModel();
         $logModel = new LogModel();
         $userId = $this->request->getPost('id');
         $name = $this->request->getPost('name');
         $bday = $this->request->getPost('bday');
-     
-
-    // Validate the input
-        if (empty($email)) {
-            return $this->response->setJSON(['success' => false, 'message' => 'Email is required']);
-        }
-
-    // Check if email already exists for another user
-        $existingUser = $model->where('email', $email)
-        ->where('id !=', $userId)
-        ->first();
-
-        if ($existingUser) {
-            return $this->response->setJSON([
-                'success' => false,
-                'message' => 'Email is already in use by another user.'
-            ]);
-        }
 
         $userData = [
             'name'       => $name,
             'bday'      => $bday,
-            
         ];
-
-        if (!empty($password)) {
-            $userData['password'] = password_hash($password, PASSWORD_BCRYPT);
-        }
 
         $updated = $model->update($userId, $userData);
 
@@ -81,7 +54,7 @@ class Person extends Controller
             $logModel->addLog('New Person has been apdated: ' . $name, 'UPDATED');
             return $this->response->setJSON([
                 'success' => true,
-                'message' => 'User updated successfully.'
+                'message' => 'Person updated successfully.'
             ]);
         } else {
             return $this->response->setJSON([
@@ -92,13 +65,13 @@ class Person extends Controller
     }
 
     public function edit($id){
-        $model = new UserModel();
+        $model = new PersonModel();
     $user = $model->find($id); // Fetch user by ID
 
     if ($user) {
         return $this->response->setJSON(['data' => $user]); // Return user data as JSON
     } else {
-        return $this->response->setStatusCode(404)->setJSON(['error' => 'Person not found']);
+        return $this->response->setStatusCode(404)->setJSON(['error' => 'User not found']);
     }
 }
 
@@ -107,7 +80,7 @@ public function delete($id){
     $logModel = new LogModel();
     $user = $model->find($id);
     if (!$user) {
-        return $this->response->setJSON(['success' => false, 'message' => 'Person deleted.']);
+        return $this->response->setJSON(['success' => false, 'message' => 'Person not found.']);
     }
 
     $deleted = $model->delete($id);
@@ -116,7 +89,7 @@ public function delete($id){
         $logModel->addLog('Delete user', 'DELETED');
         return $this->response->setJSON(['success' => true, 'message' => 'Person deleted successfully.']);
     } else {
-        return $this->response->setJSON(['success' => false, 'message' => 'Failed to delete person.']);
+        return $this->response->setJSON(['success' => false, 'message' => 'Failed to delete Person.']);
     }
 }
 
