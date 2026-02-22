@@ -72,23 +72,30 @@ class Person extends Controller
     }
 }
  
-public function delete($id){
+public function delete($id = null){
     $model = new PersonModel();
     $logModel = new LogModel();
-    $user = $model->find($id);
-    if (!$user) {
-        return $this->response->setJSON(['success' => false, 'message' => 'Person not found.']);
+    
+    // Get deletion criteria from request (either id or name)
+    $deleteId = $id ?? $this->request->getPost('id');
+    $deleteName = $this->request->getPost('name');
+    
+    // Validate that we have something to delete by
+    if (!$deleteId && !$deleteName) {
+        return $this->response->setJSON(['success' => false, 'message' => 'No ID or name provided.']);
     }
-
-    $deleted = $model->delete($id);
-
+    
+    // Delete by ID or name
+    $deleted = $deleteId ? $model->delete($deleteId) : $model->where('name', $deleteName)->delete();
+    
     if ($deleted) {
-        $logModel->addLog('Delete user', 'DELETED');
+        $logModel->addLog('Person deleted: ' . ($deleteName ?? $deleteId), 'DELETE');
         return $this->response->setJSON(['success' => true, 'message' => 'Person deleted successfully.']);
     } else {
-        return $this->response->setJSON(['success' => false, 'message' => 'Failed to delete Person.']);
+        return $this->response->setJSON(['success' => false, 'message' => 'Failed to delete person.']);
     }
 }
+
 
 public function fetchRecords()
 {
