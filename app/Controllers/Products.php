@@ -1,7 +1,6 @@
 <?php 
 namespace App\Controllers;
 
-// Siguraduhon nga naga-match ini sa file name sang imo Model sa app/Models/
 use App\Models\Product_model; 
 
 class Products extends BaseController {
@@ -9,8 +8,8 @@ class Products extends BaseController {
     // 1. READ: Listahan sang produkto
     public function index() {
         if (!session()->get('logged_in')) {
-        return redirect()->to(base_url('/'));
-    }
+            return redirect()->to(base_url('/'));
+        }
         $model = new Product_model();
         $data = [
             'products' => $model->findAll(),
@@ -25,32 +24,32 @@ class Products extends BaseController {
         return view('add_product_view', $data);
     }
 
-    // 3. CREATE: I-save sa Database
+    // 3. CREATE: I-save sa Database (FIXED KEY)
     public function store() {
         $model = new Product_model();
         $data = [
-            'product_name' => $this->request->getPost('name'),
+            // Gincatch ang 'product_name' para mag-match sa HTML name attribute
+            'product_name' => $this->request->getPost('product_name'), 
             'category'     => $this->request->getPost('category'),
             'price'        => $this->request->getPost('price'),
             'stock'        => $this->request->getPost('stock'),
         ];
-        $model->insert($data);
-        return redirect()->to(base_url('products'));
+
+        if ($model->insert($data)) {
+            return redirect()->to(base_url('products'))->with('status', 'New item added successfully!');
+        } else {
+            return redirect()->back()->withInput()->with('error', 'Failed to save product.');
+        }
     }
 
-    /**
-     * 4. UPDATE: Form para sa pag-edit (FIXED & CLEANED)
-     * Gin-isa naton ang logic para indi mag-conflict ang Model name.
-     */
+    // 4. UPDATE: Form para sa pag-edit
     public function edit($id = null) {
-        $model = new Product_model(); // Gamiton ang husto nga model name
-        
+        $model = new Product_model();
         $data = [
             'product' => $model->find($id),
-            'title'   => 'Edit Product | Riverside' // Fix para sa Undefined variable $title
+            'title'   => 'Edit Product | Riverside' 
         ];
 
-        // Check kon may nakita nga produkto para indi mag-error ang view
         if (empty($data['product'])) {
             return redirect()->to(base_url('products'));
         }
@@ -62,19 +61,20 @@ class Products extends BaseController {
     public function update($id = null) {
         $model = new Product_model();
         $data = [
-            'product_name' => $this->request->getPost('name'),
+            'product_name' => $this->request->getPost('product_name'),
             'category'     => $this->request->getPost('category'),
             'price'        => $this->request->getPost('price'),
             'stock'        => $this->request->getPost('stock'),
         ];
+        
         $model->update($id, $data);
-        return redirect()->to(base_url('products'));
+        return redirect()->to(base_url('products'))->with('status', 'Product updated!');
     }
 
     // 6. DELETE: Pag-papas sang item
     public function delete($id = null) {
         $model = new Product_model();
         $model->delete($id);
-        return redirect()->to(base_url('products'));
+        return redirect()->to(base_url('products'))->with('status', 'Product deleted!');
     }
 }

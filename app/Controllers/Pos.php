@@ -6,7 +6,13 @@ class Pos extends BaseController {
 
     public function index() {
         $db = \Config\Database::connect();
-        $data['products'] = $db->table('products')->get()->getResultArray();
+        
+        // Naka-select lahat para makuha ang 'image', 'product_name', 'price', at 'stock'
+        $data['products'] = $db->table('products')
+                               ->where('stock >', 0) // Optional: Para hindi lumabas ang out of stock
+                               ->get()
+                               ->getResultArray();
+
         return view('pos_view', $data);
     }
 
@@ -22,6 +28,15 @@ class Pos extends BaseController {
         }
 
         $db = \Config\Database::connect();
+
+        // Check if GCash Reference is already used (Prevention is better than try-catch)
+        if ($payment_method === 'GCash' && !empty($gcash_reference)) {
+            $exists = $db->table('orders')->where('gcash_reference', $gcash_reference)->countAllResults();
+            if ($exists > 0) {
+                return $this->response->setJSON(['status' => 'error', 'message' => 'Reference Number na-gamit na!']);
+            }
+        }
+
         $db->transStart(); 
 
         // --- FILE UPLOAD LOGIC ---
@@ -35,24 +50,17 @@ class Pos extends BaseController {
         }
 
         // 2. Save to 'orders' table
-        // 2. Save to 'orders' table
-    $orderData = [
-    'user_id'         => session()->get('user_id') ?? 1,
-    'total_amount'    => $total_amount,
-    'payment_method'  => $payment_method,
-    'gcash_reference' => $gcash_reference ?: null,
-    // GIN-CHANGE NATON ANG KEY DIRI PARA MAG-MATCH SA DB COLUMN:
-    'payment_screenshot' => $screenshotName, 
-    'order_date'      => date('Y-m-d H:i:s')
-    ];
+        $orderData = [
+            'user_id'            => session()->get('user_id') ?? 1,
+            'total_amount'       => $total_amount,
+            'payment_method'     => $payment_method,
+            'gcash_reference'    => $gcash_reference ?: null,
+            'payment_screenshot' => $screenshotName, 
+            'order_date'         => date('Y-m-d H:i:s')
+        ];
         
-        // Pwede mo man i-check diri kon UNIQUE ang reference
-        try {
-            $db->table('orders')->insert($orderData);
-            $orderId = $db->insertID(); 
-        } catch (\Exception $e) {
-            return $this->response->setJSON(['status' => 'error', 'message' => 'Reference Number already used!']);
-        }
+        $db->table('orders')->insert($orderData);
+        $orderId = $db->insertID(); 
 
         // 3. Save items & Update Stocks
         foreach ($items as $item) {
@@ -63,6 +71,7 @@ class Pos extends BaseController {
                 'price'      => $item->price
             ]);
             
+            // Bawasan ang stock sa products table
             $db->table('products')
                ->where('id', $item->id)
                ->set('stock', 'stock - ' . (int)$item->qty, false)
