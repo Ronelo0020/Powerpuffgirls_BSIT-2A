@@ -26,13 +26,21 @@
         <small class="text-muted">Management System</small>
     </div>
     <nav>
-        <a href="<?= base_url('dashboard') ?>" class="nav-link <?= (uri_string() == 'dashboard') ? 'active' : '' ?>"><i class="fas fa-chart-pie me-2"></i> Overview</a>
-        <a href="<?= base_url('products') ?>" class="nav-link <?= (uri_string() == 'products') ? 'active' : '' ?>"><i class="fas fa-coffee me-2"></i> Inventory</a>
-        <a href="<?= base_url('pos') ?>" class="nav-link <?= (uri_string() == 'pos') ? 'active' : '' ?>"><i class="fas fa-cash-register me-2"></i> Barista POS</a>
-        <a href="<?= base_url('sales') ?>" class="nav-link <?= (uri_string() == 'sales') ? 'active' : '' ?>"><i class="fas fa-chart-line me-2"></i> Sales Analytics</a>
-    </nav>
+    <a href="<?= base_url('dashboard') ?>" class="nav-link">Overview</a>
+    <a href="<?= base_url('products') ?>" class="nav-link">Inventory</a>
+    <a href="<?= base_url('pos') ?>" class="nav-link">Barista POS</a>
+
+    <?php if (session()->get('role') === 'admin'): ?>
+        <a href="<?= base_url('sales') ?>" class="nav-link">
+            <i class="fas fa-chart-line me-2"></i> Sales Analytics
+        </a>
+    <?php endif; ?>
+</nav>
+    
     <div class="mt-auto border-top border-secondary pt-3">
-        <a href="<?= base_url('auth/logout') ?>" class="nav-link text-danger"><i class="fas fa-sign-out-alt me-2"></i> Logout</a>
+        <a href="<?= base_url('auth/logout') ?>" class="nav-link text-danger">
+            <i class="fas fa-sign-out-alt me-2"></i> Logout
+        </a>
     </div>
 </div>
 

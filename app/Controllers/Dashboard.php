@@ -54,4 +54,29 @@ class Dashboard extends BaseController {
         
         return view('dashboard', $data); 
     }
+    // Sa loob ng class Dashboard extends BaseController
+
+public function history() {
+    if (!session()->get('logged_in')) {
+        return redirect()->to(base_url('/'));
+    }
+
+    $db = \Config\Database::connect();
+    
+    // Kunin ang lahat ng orders (Full History)
+    $builderOrders = $db->table('orders');
+    $builderOrders->select('orders.*, GROUP_CONCAT(products.product_name SEPARATOR ", ") as items');
+    $builderOrders->join('order_items', 'order_items.order_id = orders.id', 'left');
+    $builderOrders->join('products', 'products.id = order_items.product_id', 'left');
+    $builderOrders->groupBy('orders.id');
+    $builderOrders->orderBy('orders.order_date', 'DESC');
+    // Tinanggal ang ->limit(10) para lumabas lahat
+    
+    $data = [
+        'all_orders' => $builderOrders->get()->getResultArray(),
+        'title'      => 'Riverside Café | Transaction History'
+    ];
+
+    return view('transaction_history', $data); 
+}
 }

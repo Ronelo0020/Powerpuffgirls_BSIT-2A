@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Riverside | Inventory</title>
+    <title><?= $title ?? 'Riverside | Inventory' ?></title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
@@ -17,7 +17,6 @@
         
         body { background-color: var(--body-bg); font-family: 'Poppins', sans-serif; display: flex; min-height: 100vh; margin: 0; }
 
-        /* Sidebar Styling */
         .sidebar { 
             width: 260px; 
             background: var(--sidebar-bg); 
@@ -43,7 +42,6 @@
         }
         .nav-link:hover, .nav-link.active { background: rgba(255,255,255,0.1); color: var(--riverside-red); }
 
-        /* Inventory Cards */
         .category-card {
             border: none;
             border-radius: 15px;
@@ -72,10 +70,10 @@
             justify-content: space-between;
         }
         .item-name { font-weight: 500; color: #2c3e50; margin-bottom: 2px; }
-        .sku-label { font-size: 0.8rem; }
+        .sku-label { font-size: 0.8rem; color: #999; }
 
         .price-tag { color: var(--riverside-red); font-weight: 700; font-size: 0.95rem; }
-        .stock-indicator { font-size: 0.75rem; font-weight: 600; padding: 4px 10px; border-radius: 20px; }
+        .stock-indicator { font-size: 0.75rem; font-weight: 600; padding: 6px 12px; border-radius: 20px; }
         
         .btn-action-circle {
             width: 35px; height: 35px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;
@@ -94,33 +92,31 @@
         <small class="text-muted">Inventory Admin</small>
     </div>
 
-   <nav class="d-flex flex-column h-100">
-    <a href="<?= base_url('dashboard') ?>" class="nav-link <?= (uri_string() == 'dashboard') ? 'active' : '' ?>">
-        <i class="fas fa-chart-pie me-3"></i> Overview
-    </a>
-    <a href="<?= base_url('products') ?>" class="nav-link <?= (uri_string() == 'products') ? 'active' : '' ?>">
-        <i class="fas fa-coffee me-3"></i> Menu & Inventory
-    </a>
-    <a href="<?= base_url('pos') ?>" class="nav-link <?= (uri_string() == 'pos') ? 'active' : '' ?>">
-        <i class="fas fa-cash-register me-3"></i> Barista POS
-    </a>
-    <a href="<?= base_url('sales') ?>" class="nav-link <?= (uri_string() == 'sales') ? 'active' : '' ?>">
-        <i class="fas fa-file-invoice-dollar me-3"></i> Sales Reports
-    </a>
-
-    <?php if(session()->get('role') == 'admin'): ?>
-        <hr class="text-secondary opacity-25 mx-3">
-        <p class="small text-muted px-3 mb-2" style="font-size: 0.65rem; letter-spacing: 1px;">ADMINISTRATION</p>
-        <a href="<?= base_url('auth/manage') ?>" class="nav-link <?= (uri_string() == 'auth/manage') ? 'active' : '' ?>">
-            <i class="fas fa-users-cog me-3"></i> Manage Staff
+    <nav class="d-flex flex-column h-100">
+        <a href="<?= base_url('dashboard') ?>" class="nav-link <?= (uri_string() == 'dashboard') ? 'active' : '' ?>">
+            <i class="fas fa-chart-pie me-3"></i> Overview
         </a>
-    <?php endif; ?>
+        <a href="<?= base_url('products') ?>" class="nav-link <?= (uri_string() == 'products') ? 'active' : '' ?>">
+            <i class="fas fa-coffee me-3"></i> Menu & Inventory
+        </a>
+        <a href="<?= base_url('pos') ?>" class="nav-link <?= (uri_string() == 'pos') ? 'active' : '' ?>">
+            <i class="fas fa-cash-register me-3"></i> Barista POS
+        </a>
 
-    
-</nav>
+        <?php if(session()->get('role') == 'admin'): ?>
+            <hr class="text-secondary opacity-25 mx-3">
+            <p class="small text-muted px-3 mb-2" style="font-size: 0.65rem; letter-spacing: 1px;">ADMINISTRATION</p>
+            <a href="<?= base_url('sales') ?>" class="nav-link <?= (uri_string() == 'sales') ? 'active' : '' ?>">
+                <i class="fas fa-file-invoice-dollar me-3"></i> Sales Reports
+            </a>
+            <a href="<?= base_url('auth/manage') ?>" class="nav-link <?= (uri_string() == 'auth/manage') ? 'active' : '' ?>">
+                <i class="fas fa-users-cog me-3"></i> Manage Staff
+            </a>
+        <?php endif; ?>
+    </nav>
 
-    <div class="mt-auto border-top border-secondary pt-3">
-        <a href="<?= base_url('auth/logout') ?>" class="nav-link text-danger">
+    <div class="mt-auto border-top border-secondary pt-3 px-2">
+        <a href="<?= base_url('auth/logout') ?>" class="nav-link text-danger p-0">
             <i class="fas fa-sign-out-alt me-2"></i> Logout
         </a>
     </div>
@@ -132,7 +128,7 @@
             <h2 class="fw-bold">Menu & Inventory</h2>
             <p class="text-muted">Monitor stocks and manage product details</p>
         </div>
-        <a href="<?= base_url('products/add') ?>" class="btn-add">
+        <a href="<?= base_url('products/add') ?>" class="btn-add shadow-sm">
             <i class="fas fa-plus me-2"></i> Add New Product
         </a>
     </div>
@@ -140,7 +136,9 @@
     <div id="menuAccordion">
         <?php 
         $grouped = [];
-        foreach($products as $p) { $grouped[$p['category']][] = $p; }
+        if(!empty($products)) {
+            foreach($products as $p) { $grouped[$p['category']][] = $p; }
+        }
 
         $i = 0;
         foreach($grouped as $category => $items): 
@@ -162,7 +160,7 @@
                     <div class="item-row">
                         <div style="flex: 2;">
                             <div class="item-name"><?= $item['product_name'] ?></div>
-                            <small class="text-muted sku-label">Stock Keeping Unit: <?= $item['id'] ?></small>
+                            <small class="sku-label">SKU: #<?= $item['id'] ?></small>
                         </div>
                         
                         <div style="flex: 1;" class="text-center">
@@ -171,22 +169,33 @@
 
                         <div style="flex: 1;" class="text-center">
                             <?php if($item['stock'] <= 0): ?>
-                                <span class="stock-indicator bg-light text-muted border">NOT AVAIL</span>
+                                <span class="stock-indicator bg-danger-subtle text-danger border border-danger">OUT OF STOCK</span>
+                            <?php elseif($item['stock'] <= 5): ?>
+                                <span class="stock-indicator bg-danger text-white shadow-sm">
+                                    <i class="fas fa-exclamation-triangle me-1"></i> <?= $item['stock'] ?> Low Stock
+                                </span>
                             <?php else: ?>
-                                <span class="stock-indicator bg-success-subtle text-success"><?= $item['stock'] ?> Units</span>
+                                <span class="stock-indicator bg-success-subtle text-success">
+                                    <i class="fas fa-check-circle me-1"></i> <?= $item['stock'] ?> Units
+                                </span>
                             <?php endif; ?>
                         </div>
 
                         <div style="flex: 1;" class="text-end">
-                            <a href="<?= base_url('products/edit/'.$item['id']) ?>" class="btn-action-circle me-1"><i class="fas fa-pen fa-sm"></i></a>
-                            <a href="<?= base_url('products/delete/'.$item['id']) ?>" class="btn-action-circle text-danger"><i class="fas fa-trash-alt fa-sm"></i></a>
+                            <a href="<?= base_url('products/edit/'.$item['id']) ?>" class="btn-action-circle me-1" title="Edit"><i class="fas fa-pen fa-sm"></i></a>
+                            <a href="<?= base_url('products/delete/'.$item['id']) ?>" class="btn-action-circle text-danger" title="Delete" onclick="return confirm('Are you sure?')"><i class="fas fa-trash-alt fa-sm"></i></a>
                         </div>
                     </div>
                     <?php endforeach; ?>
                 </div>
             </div>
         </div>
-        <?php endforeach; ?>
+        <?php endforeach; if(empty($grouped)): ?>
+            <div class="text-center py-5">
+                <i class="fas fa-box-open fa-3x text-muted mb-3"></i>
+                <p class="text-muted">No products found in the inventory.</p>
+            </div>
+        <?php endif; ?>
     </div>
 </div>
 

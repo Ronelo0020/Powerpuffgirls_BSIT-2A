@@ -11,7 +11,7 @@
     <style>
         body {
             background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
-                        url('<?= base_url("assets/img/rs.jpg") ?>'); 
+                        url('<?= base_url("assets/img/river.jpg") ?>'); 
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -158,12 +158,12 @@
 
             <div class="mb-1">
                 <label class="form-label">Email Address</label>
-                <input type="email" name="email" class="form-control" placeholder="admin@riverside.com" required>
+                <input type="email" name="email" class="form-control" placeholder="example.com" required>
             </div>
 
             <div class="mb-1">
                 <label class="form-label">Password</label>
-                <input type="password" name="password" class="form-control" placeholder="••••••••" required>
+                <input type="password" name="password" class="form-control" placeholder="" required>
             </div>
 
             <button type="submit" class="btn btn-cafe">Sign In</button>

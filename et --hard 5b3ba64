@@ -1,0 +1,20 @@
+[33mf8a620b[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{0}: rebase (abort): returning to refs/heads/main
+[33m5b3ba64[m HEAD@{1}: commit (amend): feat: updated staff management views by Irish
+[33m6f38ea0[m HEAD@{2}: rebase (start): checkout HEAD~2
+[33mf8a620b[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{3}: commit: feat: finalized Riverside Cafe views for inventory and sales
+[33mc2e6dc9[m HEAD@{4}: reset: moving to HEAD
+[33mc2e6dc9[m HEAD@{5}: commit: feat: Agus updated the Riverside Cafe Views and fixed styling
+[33m6f38ea0[m HEAD@{6}: commit: feat: updated staff management views by Irish
+[33m0a7762d[m HEAD@{7}: commit: feat: implemented Products, POS, and Orders update by Mailen
+[33m6fb965d[m HEAD@{8}: commit: feat: updated system architecture by Ronelo
+[33m7e18026[m HEAD@{9}: Branch: renamed refs/heads/main to refs/heads/main
+[33m7e18026[m HEAD@{11}: reset: moving to HEAD
+[33m7e18026[m HEAD@{12}: rebase (abort): returning to refs/heads/main
+[33mc5e2ee8[m HEAD@{13}: pull origin main --rebase (start): checkout c5e2ee89899725a9c652fa1b8b4fe44635aed266
+[33m7e18026[m HEAD@{14}: commit: docs: temporary save before rebase
+[33m44903eb[m HEAD@{15}: commit: Auth Module: Implementation of Login and Registration Interface
+[33ma1e2b22[m HEAD@{16}: commit: Database Design: Implement Product and User models for data management
+[33m2642669[m HEAD@{17}: Branch: renamed refs/heads/main to refs/heads/main
+[33m2642669[m HEAD@{19}: commit: System Architecture: Setup Routes and Overall Controller Logic for Auth, CRUD, and POS
+[33me6fd30f[m HEAD@{20}: Branch: renamed refs/heads/master to refs/heads/main
+[33me6fd30f[m HEAD@{22}: commit (initial): Initial commit: Complete Coffee Shop System

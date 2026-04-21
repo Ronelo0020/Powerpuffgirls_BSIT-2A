@@ -7,7 +7,7 @@ use CodeIgniter\Router\RouteCollection;
 // --- AUTHENTICATION ---
 $routes->get('/', 'Auth::index');
 $routes->post('auth/loginProcess', 'Auth::loginProcess');
-$routes->get('auth/logout', 'Auth::logout');
+$routes->get('logout', 'Auth::logout');
 
 // --- DASHBOARD ---
 $routes->get('dashboard', 'Dashboard::index');
@@ -29,6 +29,9 @@ $routes->get('sales', 'Sales::index');
 $routes->get('auth/manage', 'Auth::manage');
 $routes->get('auth/register', 'Auth::register');
 $routes->post('auth/store', 'Auth::store');
-$routes->get('auth/staff_edit/(:num)', 'Auth::edit/$1');
-$routes->post('auth/staff_update/(:num)', 'Auth::update/$1');
-$routes->get('auth/staff_delete/(:num)', 'Auth::delete/$1');
+$routes->get('auth/edit/(:num)', 'Auth::edit/$1');
+$routes->post('auth/update/(:num)', 'Auth::update/$1');
+$routes->get('auth/delete/(:num)', 'Auth::delete/$1');
+// Magdagdag sa ilalim ng existing dashboard route
+$routes->get('dashboard', 'Dashboard::index');
+$routes->get('dashboard/history', 'Dashboard::history'); // Ito ang kulang na route

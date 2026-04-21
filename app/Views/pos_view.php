@@ -12,40 +12,47 @@
         :root { --riverside-red: #ff4d4d; --sidebar-bg: #212529; --body-bg: #f4f7f6; }
         body { background-color: var(--body-bg); font-family: 'Poppins', sans-serif; display: flex; height: 100vh; overflow: hidden; margin: 0; }
         
-        /* Sidebar */
         .sidebar { width: 260px; background: var(--sidebar-bg); padding: 30px 20px; display: flex; flex-direction: column; color: white; flex-shrink: 0; }
         .nav-link { color: rgba(255,255,255,0.7); padding: 12px 15px; border-radius: 10px; margin-bottom: 5px; transition: 0.3s; text-decoration: none; display: flex; align-items: center; font-size: 0.9rem; }
         .nav-link.active { background: rgba(255,255,255,0.1); color: var(--riverside-red); }
 
-        /* Main Content */
         .main-content { flex: 1; display: flex; flex-direction: column; padding: 25px; overflow: hidden; }
-        
-        /* Search Bar */
         .search-container { position: relative; margin-bottom: 20px; }
         .search-input { padding: 12px 20px 12px 45px; border-radius: 15px; border: 1px solid #ddd; width: 100%; box-shadow: 0 4px 10px rgba(0,0,0,0.03); outline: none; }
         .search-icon { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: #aaa; }
 
-        /* Product Grid */
         .product-grid { overflow-y: auto; flex: 1; padding-right: 5px; }
-        .product-card { 
-            background: white; border-radius: 20px; border: 1px solid #eee; overflow: hidden; 
-            transition: 0.3s; cursor: pointer; height: 100%; display: flex; flex-direction: column; 
-        }
+        .product-card { background: white; border-radius: 20px; border: 1px solid #eee; overflow: hidden; transition: 0.3s; cursor: pointer; height: 100%; display: flex; flex-direction: column; }
         .product-card:hover { transform: translateY(-5px); border-color: var(--riverside-red); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
-        .img-wrapper { height: 130px; background: #f9f9f9; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        
+        .img-wrapper { height: 150px; background: #fdfdfd; overflow: hidden; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid #f0f0f0; }
         .product-img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* Order Panel */
         .order-panel { width: 400px; background: white; border-left: 1px solid #dee2e6; display: flex; flex-direction: column; padding: 25px; }
         .cart-container { flex: 1; overflow-y: auto; margin-bottom: 15px; min-height: 150px; }
         .cart-item { background: #f8f9fa; border-radius: 12px; padding: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #f0f0f0; }
 
-        .btn-check:checked + .btn-outline-danger { background-color: var(--riverside-red); color: white; }
         .btn-checkout { background: var(--riverside-red); color: white; border: none; padding: 15px; border-radius: 12px; font-weight: 700; width: 100%; transition: 0.3s; box-shadow: 0 10px 20px rgba(255, 77, 77, 0.2); }
         
-        .qr-container { background: #f8f9fa; border-radius: 15px; padding: 15px; border: 2px dashed #007bff; }
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-thumb { background: #eee; border-radius: 10px; }
+        /* --- ADVANCE RECEIPT STYLES --- */
+        #printableReceipt { 
+            background: #fff; 
+            padding: 10px; 
+            font-family: 'Courier New', Courier, monospace; 
+            font-size: 13px; 
+            color: #000;
+        }
+        .receipt-header h5 { letter-spacing: 2px; margin-bottom: 2px; }
+        .receipt-dashed { border-top: 1px dashed #000; margin: 8px 0; }
+        .receipt-item-row { margin-bottom: 3px; display: flex; justify-content: space-between; }
+        .receipt-label { font-size: 11px; text-transform: uppercase; color: #555; }
+        
+        @media print {
+            body * { visibility: hidden; }
+            #receiptModal, #receiptModal * { visibility: visible; }
+            #printableReceipt { position: absolute; left: 0; top: 0; width: 100%; }
+            .modal-footer, .btn-close { display: none !important; }
+        }
     </style>
 </head>
 <body>
@@ -56,34 +63,29 @@
         <small class="text-muted text-uppercase" style="font-size: 0.7rem; letter-spacing: 1px;">Barista Terminal</small>
     </div>
     <nav class="d-flex flex-column h-100">
-    <a href="<?= base_url('dashboard') ?>" class="nav-link <?= (uri_string() == 'dashboard') ? 'active' : '' ?>">
-        <i class="fas fa-chart-pie me-3"></i> Overview
-    </a>
-    <a href="<?= base_url('products') ?>" class="nav-link <?= (uri_string() == 'products') ? 'active' : '' ?>">
-        <i class="fas fa-coffee me-3"></i> Menu & Inventory
-    </a>
-    <a href="<?= base_url('pos') ?>" class="nav-link <?= (uri_string() == 'pos') ? 'active' : '' ?>">
-        <i class="fas fa-cash-register me-3"></i> Barista POS
-    </a>
-    <a href="<?= base_url('sales') ?>" class="nav-link <?= (uri_string() == 'sales') ? 'active' : '' ?>">
-        <i class="fas fa-file-invoice-dollar me-3"></i> Sales Reports
-    </a>
-
-    <?php if(session()->get('role') == 'admin'): ?>
-        <hr class="text-secondary opacity-25 mx-3">
-        <p class="small text-muted px-3 mb-2" style="font-size: 0.65rem; letter-spacing: 1px;">ADMINISTRATION</p>
-        <a href="<?= base_url('auth/manage') ?>" class="nav-link <?= (uri_string() == 'auth/manage') ? 'active' : '' ?>">
-            <i class="fas fa-users-cog me-3"></i> Manage Staff
+        <a href="<?= base_url('dashboard') ?>" class="nav-link">
+            <i class="fas fa-chart-pie me-3"></i> Overview
         </a>
-    <?php endif; ?>
-
-    <div class="mt-auto">
-        <hr class="text-secondary opacity-25 mx-3">
-        <a href="<?= base_url('logout') ?>" class="nav-link text-danger">
-            <i class="fas fa-sign-out-alt me-3"></i> Logout
+        <a href="<?= base_url('products') ?>" class="nav-link">
+            <i class="fas fa-coffee me-3"></i> Menu & Inventory
         </a>
-    </div>
-</nav>
+        <a href="<?= base_url('pos') ?>" class="nav-link active">
+            <i class="fas fa-cash-register me-3"></i> Barista POS
+        </a>
+        <?php if(session()->get('role') == 'admin'): ?>
+            <a href="<?= base_url('sales') ?>" class="nav-link">
+                <i class="fas fa-file-invoice-dollar me-3"></i> Sales Reports
+            </a>
+            <a href="<?= base_url('auth/manage') ?>" class="nav-link">
+                <i class="fas fa-users-cog me-3"></i> Manage Staff
+            </a>
+        <?php endif; ?>
+        <div class="mt-auto">
+            <a href="<?= base_url('logout') ?>" class="nav-link text-danger">
+                <i class="fas fa-sign-out-alt me-3"></i> Logout
+            </a>
+        </div>
+    </nav>
 </div>
 
 <div class="main-content">
@@ -110,11 +112,7 @@
             <div class="col-6 col-md-4 col-lg-3 product-card-item" data-name="<?= strtolower($p['product_name']) ?>">
                 <div class="product-card shadow-sm" onclick="addToCart('<?= $p['id'] ?>', '<?= addslashes($p['product_name']) ?>', <?= $p['price'] ?>)">
                     <div class="img-wrapper">
-                        <?php if(!empty($p['image'])): ?>
-                            <img src="<?= base_url('assets/img/products/'.$p['image']) ?>" class="product-img">
-                        <?php else: ?>
-                            <i class="fas fa-mug-hot text-light fa-3x"></i>
-                        <?php endif; ?>
+                        <img src="<?= base_url('assets/img/products/'.$p['image']) ?>" class="product-img" onerror="this.src='<?= base_url('assets/img/no-image.png') ?>';">
                     </div>
                     <div class="p-3 text-center">
                         <h6 class="fw-bold text-dark mb-1" style="font-size: 0.85rem;"><?= $p['product_name'] ?></h6>
@@ -130,7 +128,6 @@
 
 <div class="order-panel">
     <h5 class="fw-bold mb-4 border-bottom pb-3"><i class="fas fa-shopping-basket me-2 text-danger"></i> Current Order</h5>
-    
     <div id="cart-items" class="cart-container text-center py-5">
         <i class="fas fa-receipt fa-3x text-light mb-3"></i>
         <p class="text-muted">Tray is empty.</p>
@@ -159,10 +156,7 @@
         </div>
 
         <div id="gcash-input-group" style="display: none;">
-            <label class="form-label small fw-bold text-muted">GCASH REFERENCE (13-digit)</label>
             <input type="text" id="gcash-reference" class="form-control mb-2" maxlength="13" placeholder="Reference No.">
-            
-            <label class="form-label small fw-bold text-muted">RECEIPT SCREENSHOT</label>
             <input type="file" id="gcash-ss" class="form-control form-control-sm" accept="image/*">
         </div>
 
@@ -176,15 +170,83 @@
     </div>
 </div>
 
+<div class="modal fade" id="receiptModal" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 15px; overflow: hidden;">
+            <div class="modal-body p-4" id="printableReceipt">
+                <div class="text-center receipt-header">
+                    <h5 class="fw-bold mb-0">RIVERSIDE CAFÉ</h5>
+                    <p class="small mb-0" style="font-size: 10px;">BURGOS STREET, BRGY. 8</p> 
+                    <p class="small mb-0" style="font-size: 10px;">KABANKALAN CITY, PHILIPPINES</p>
+                    <p class="small mb-0" style="font-size: 10px;" id="receiptDateText"></p>
+                </div>
+
+                <div class="receipt-dashed"></div>
+
+                <div class="d-flex justify-content-between fw-bold mb-1" style="font-size: 11px;">
+                    <span>ITEM/QTY</span>
+                    <span>AMOUNT</span>
+                </div>
+                
+                <div id="receiptItemsList"></div>
+                
+                <div class="receipt-dashed"></div>
+                
+                <div class="receipt-item-row">
+                    <span class="receipt-label">Subtotal</span>
+                    <span id="receiptSubtotalText">₱0.00</span>
+                </div>
+                <div class="receipt-item-row fw-bold" style="font-size: 16px;">
+                    <span>TOTAL</span>
+                    <span id="receiptTotalText">₱0.00</span>
+                </div>
+
+                <div class="receipt-dashed" style="border-top-style: solid; opacity: 0.1;"></div>
+
+                <div class="receipt-item-row">
+                    <span class="receipt-label">Tendered</span>
+                    <span id="receiptPaymentText">₱0.00</span>
+                </div>
+                <div class="receipt-item-row">
+                    <span class="receipt-label">Change</span>
+                    <span id="receiptChangeText" class="fw-bold">₱0.00</span>
+                </div>
+
+                <div class="text-center mt-4">
+                    <p class="small mb-1 fw-bold">ORDER ID: <span id="receiptOrderIDText"></span></p>
+                    <div class="mb-2">
+                        <div style="background: black; height: 30px; width: 80%; margin: 0 auto; display: flex; align-items: flex-end; justify-content: space-around; padding: 0 5px;">
+                            <div style="background: white; width: 2px; height: 80%;"></div>
+                            <div style="background: white; width: 1px; height: 60%;"></div>
+                            <div style="background: white; width: 3px; height: 80%;"></div>
+                            <div style="background: white; width: 1px; height: 90%;"></div>
+                            <div style="background: white; width: 2px; height: 70%;"></div>
+                            <div style="background: white; width: 4px; height: 80%;"></div>
+                        </div>
+                    </div>
+                    <p class="mb-0" style="font-size: 9px;">THANK YOU! COME AGAIN</p>
+                </div>
+            </div>
+            <div class="modal-footer border-0 p-3 bg-light">
+                <div class="row w-100 g-2">
+                    <div class="col-6">
+                        <button type="button" class="btn btn-outline-dark btn-sm w-100 py-2" onclick="window.location.reload()">NEW</button>
+                    </div>
+                    <div class="col-6">
+                        <button type="button" class="btn btn-danger btn-sm w-100 py-2" onclick="window.print()">PRINT</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="modal fade" id="gcashModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-sm">
         <div class="modal-content text-center p-4" style="border-radius: 20px;">
             <h6 class="fw-bold mb-3">Scan to Pay</h6>
-            <div class="qr-container mb-3">
-                <img src="<?= base_url('assets/img/gcash_qr.jpg') ?>" class="img-fluid rounded shadow-sm">
-            </div>
-            <p class="fw-bold mb-0 text-primary">RO***O D.</p>
-            <button type="button" class="btn btn-dark w-100 mt-4 rounded-pill" data-bs-dismiss="modal">Proceed</button>
+            <img src="<?= base_url('assets/img/gcash_qr.jpg') ?>" class="img-fluid rounded mb-3">
+            <button type="button" class="btn btn-dark w-100 rounded-pill" data-bs-dismiss="modal">Proceed</button>
         </div>
     </div>
 </div>
@@ -251,21 +313,23 @@
         if (cart.length === 0) return alert("Pili anay kape.");
         
         const method = document.querySelector('input[name="payment_method"]:checked').value;
-        const gcashRef = document.getElementById('gcash-reference').value.trim();
-        const gcashSS = document.getElementById('gcash-ss').files[0];
+        const tendered = parseFloat(document.getElementById('cash-amount').value) || 0;
         const total = cart.reduce((s, i) => s + (i.price * i.qty), 0);
+        const change = tendered - total;
         
-        if (method === 'GCash') {
-            if (gcashRef.length < 13) return alert("Input exact 13-digit Reference!");
-            if (!gcashSS) return alert("Upload screenshot!");
-        }
+        if (method === 'Cash' && tendered < total) return alert("Insufficient cash!");
 
         let formData = new FormData();
         formData.append('items', JSON.stringify(cart));
         formData.append('total_amount', total);
+        formData.append('payment', tendered);
+        formData.append('change_amount', change >= 0 ? change : 0);
         formData.append('payment_method', method);
-        formData.append('gcash_reference', gcashRef);
-        if (gcashSS) formData.append('payment_screenshot', gcashSS);
+        
+        if(method === 'GCash') {
+            formData.append('gcash_reference', document.getElementById('gcash-reference').value);
+            formData.append('payment_screenshot', document.getElementById('gcash-ss').files[0]);
+        }
 
         try {
             const res = await fetch('<?= base_url("pos/save_order") ?>', {
@@ -274,8 +338,30 @@
                 headers: { 'X-Requested-With': 'XMLHttpRequest' }
             });
             const data = await res.json();
-            if (data.status === 'success') { alert("Order Saved!"); window.location.reload(); } 
-            else alert(data.message);
+            
+            if (data.status === 'success') {
+                // Populate Advanced Receipt
+                document.getElementById('receiptDateText').innerText = new Date().toLocaleString();
+                document.getElementById('receiptOrderIDText').innerText = data.order_id;
+                document.getElementById('receiptTotalText').innerText = "₱" + total.toFixed(2);
+                document.getElementById('receiptSubtotalText').innerText = "₱" + total.toFixed(2);
+                document.getElementById('receiptPaymentText').innerText = "₱" + tendered.toFixed(2);
+                document.getElementById('receiptChangeText').innerText = "₱" + (change >= 0 ? change.toFixed(2) : "0.00");
+
+                let itemsHtml = '';
+                cart.forEach(item => {
+                    itemsHtml += `
+                        <div class="receipt-item-row">
+                            <span>${item.qty} x ${item.name.substring(0,18)}</span>
+                            <span>₱${(item.price * item.qty).toFixed(2)}</span>
+                        </div>`;
+                });
+                document.getElementById('receiptItemsList').innerHTML = itemsHtml;
+
+                new bootstrap.Modal(document.getElementById('receiptModal')).show();
+            } else {
+                alert(data.message);
+            }
         } catch (e) { alert("Error connecting to server."); }
     }
 </script>

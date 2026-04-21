@@ -10,13 +10,11 @@ class Auth extends BaseController {
         return view('login');
     }
 
-    // --- Diri ang FIX: Gindugang ang register() function ---
     public function register() {
         $session = session();
         if ($session->get('role') != 'admin') {
             return redirect()->to(base_url('dashboard'));
         }
-        // Ini dapat mag-match sa ngalan sang imo PHP file sa views/auth/
         return view('auth/register'); 
     }
 
@@ -67,7 +65,7 @@ class Auth extends BaseController {
             return redirect()->to(base_url('dashboard'));
         }
 
-        $model = model(User_model::class);
+        $model = new User_model();
         $db = \Config\Database::connect();
 
         $data['staff_members'] = $model->where('role', 'staff')->findAll();
@@ -108,8 +106,9 @@ class Auth extends BaseController {
         return redirect()->to(base_url('/'));
     }
 
+    // Pag-save sang bag-o nga staff
     public function store() {
-        $model = model(User_model::class);
+        $model = new User_model();
         $data = [
             'name'     => $this->request->getPost('name'),
             'email'    => $this->request->getPost('email'),
@@ -122,26 +121,33 @@ class Auth extends BaseController {
     }
 
     public function edit($id) {
-        $model = model(User_model::class);
+        $model = new User_model();
         $data['staff'] = $model->find($id);
+        
+        if (!$data['staff']) {
+            return redirect()->to('auth/manage')->with('msg', 'Staff not found!');
+        }
+        
         return view('auth/edit_staff', $data);
     }
 
+    // Pag-update sang staff details (pati ang Schedule)
     public function update($id) {
-        $model = model(User_model::class);
+        $model = new User_model();
         $data = [
             'name'     => $this->request->getPost('name'),
             'email'    => $this->request->getPost('email'),
             'role'     => $this->request->getPost('role'),
-            'duty_day' => $this->request->getPost('duty_day')
+            'duty_day' => $this->request->getPost('duty_day') // FIX: Siguraduhon nga makuha ang data halin sa view
         ];
+        
         $model->update($id, $data);
-        return redirect()->to(base_url('auth/manage'))->with('msg', 'Updated!');
+        return redirect()->to(base_url('auth/manage'))->with('msg', 'Updated Successfully!');
     }
 
     public function delete($id) {
-        $model = model(User_model::class);
+        $model = new User_model();
         $model->delete($id);
-        return redirect()->to(base_url('auth/manage'));
+        return redirect()->to(base_url('auth/manage'))->with('msg', 'Staff Deleted!');
     }
 }

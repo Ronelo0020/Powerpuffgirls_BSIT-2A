@@ -7,16 +7,32 @@ class Products extends BaseController {
 
     // 1. READ: Listahan sang produkto
     public function index() {
-        if (!session()->get('logged_in')) {
-            return redirect()->to(base_url('/'));
-        }
-        $model = new Product_model();
-        $data = [
-            'products' => $model->findAll(),
-            'title'    => 'Riverside | Inventory'
-        ];
-        return view('products_list', $data); 
+    if (!session()->get('logged_in')) {
+        return redirect()->to(base_url('/'));
     }
+    
+    $model = new Product_model();
+    
+    // Kunin lahat ng products
+    $all_products = $model->findAll();
+    
+    // Bilangin kung ilan ang low stock (5 pababa pero hindi 0)
+    // Para mag-match ito sa dashboard alert mo
+    $low_count = 0;
+    foreach($all_products as $p) {
+        if($p['stock'] <= 5 && $p['stock'] > 0) {
+            $low_count++;
+        }
+    }
+
+    $data = [
+        'products'  => $all_products,
+        'low_count' => $low_count, // Ito ang bilang na dapat pumasok sa dashboard
+        'title'     => 'Riverside | Inventory'
+    ];
+    
+    return view('products_list', $data); 
+}
 
     // 2. CREATE: Form sa pag-add
     public function add() {
@@ -58,18 +74,37 @@ class Products extends BaseController {
     }
 
     // 5. UPDATE: I-save ang gin-edit
-    public function update($id = null) {
-        $model = new Product_model();
-        $data = [
-            'product_name' => $this->request->getPost('product_name'),
-            'category'     => $this->request->getPost('category'),
-            'price'        => $this->request->getPost('price'),
-            'stock'        => $this->request->getPost('stock'),
-        ];
+  public function update($id = null) {
+    $model = new \App\Models\Product_model(); // Siguraduhin na tama ang namespace ng model mo
+
+    // 1. Kunin muna ang mga basic data galing sa form
+    $data = [
+        'product_name' => $this->request->getPost('product_name'),
+        'category'     => $this->request->getPost('category'),
+        'price'        => $this->request->getPost('price'),
+        'stock'        => $this->request->getPost('stock'),
+    ];
+
+    // 2. Handle ang image upload
+    $file = $this->request->getFile('product_image');
+
+    // I-check kung may valid na file na in-upload
+    if ($file && $file->isValid() && !$file->hasMoved()) {
+        // Kunin ang original name (hal. "Cappuccino.jpg")
+        $imageName = $file->getName(); 
         
-        $model->update($id, $data);
-        return redirect()->to(base_url('products'))->with('status', 'Product updated!');
+        // Ilipat ang file sa tamang folder: public/assets/img/products/
+        $file->move(FCPATH . 'assets/img/products/', $imageName);
+        
+        // Idagdag ang image name sa $data array para ma-save sa database
+        $data['image'] = $imageName;
     }
+
+    // 3. I-update ang database gamit ang kumpletong $data
+    $model->update($id, $data);
+
+    return redirect()->to(base_url('products'))->with('status', 'Product updated successfully!');
+}
 
     // 6. DELETE: Pag-papas sang item
     public function delete($id = null) {
