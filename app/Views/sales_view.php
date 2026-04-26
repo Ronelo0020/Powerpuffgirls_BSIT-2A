@@ -9,174 +9,224 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     
     <style>
-        :root { --riverside-red: #ff4d4d; --sidebar-bg: #212529; --body-bg: #f8f9fa; }
-        body { background-color: var(--body-bg); font-family: 'Poppins', sans-serif; margin: 0; display: flex; min-height: 100vh; }
-        .sidebar { width: 260px; background: var(--sidebar-bg); padding: 30px 20px; display: flex; flex-direction: column; color: white; flex-shrink: 0; }
-        .nav-link { color: rgba(255,255,255,0.7); padding: 12px 15px; border-radius: 10px; margin-bottom: 5px; transition: 0.3s; text-decoration: none; display: flex; align-items: center; font-size: 0.9rem; }
-        .nav-link.active { background: rgba(255,255,255,0.1); color: var(--riverside-red); }
-        .main-content { flex: 1; padding: 30px; overflow-y: auto; }
-        .stat-card { background: #fff; border-radius: 15px; border: 1px solid #dee2e6; padding: 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); height: 100%; }
-        .stat-label { font-size: 0.75rem; text-transform: uppercase; font-weight: 600; color: #6c757d; letter-spacing: 0.5px; }
-        .stat-value { font-size: 1.6rem; font-weight: 700; color: #212529; margin-top: 5px; }
-        .chart-container { background: white; border-radius: 15px; border: 1px solid #dee2e6; padding: 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
-        .btn-print { border: 1px solid #dee2e6; background: white; color: #495057; font-weight: 600; padding: 8px 20px; border-radius: 8px; transition: 0.3s; }
-        
-        /* Custom Button Style para sa Legend */
-        .chart-toggle-btn { 
-            border: 2px solid var(--riverside-red); 
-            background: rgba(255, 77, 77, 0.05); 
-            color: var(--riverside-red); 
-            font-weight: 600; 
-            padding: 8px 20px; 
-            border-radius: 30px; 
-            transition: 0.3s;
-            font-size: 0.85rem;
+        :root { 
+            --sidebar-dark: #000000;
+            --bg-dark: #121212;
+            --card-dark: #1a1a1a;
+            --accent-gold: #ffcc4d; 
+            --text-main: #ffffff;
+            --text-muted: #b3b3b3;
         }
-        .chart-toggle-btn:hover { background: var(--riverside-red); color: white; }
-        .chart-toggle-btn.hidden-data { opacity: 0.5; background: #e9ecef; border-color: #adb5bd; color: #6c757d; }
 
-        @media print { .sidebar, .btn-print, .chart-toggle-btn { display: none !important; } .main-content { padding: 0; } }
+        body { 
+            background-color: var(--bg-dark); 
+            font-family: 'Poppins', sans-serif; 
+            margin: 0; 
+            display: flex; 
+            height: 100vh; /* Para fix ang sidebar height */
+            overflow: hidden;
+            color: var(--text-main); 
+        }
+
+        /* --- SIDEBAR --- */
+        .sidebar { 
+            width: 260px; 
+            background: var(--sidebar-dark); 
+            padding: 30px 20px; 
+            display: flex; 
+            flex-direction: column; 
+            border-right: 1px solid #333; 
+            flex-shrink: 0; 
+        }
+        .nav-link { 
+            color: var(--text-muted); 
+            padding: 12px 15px; 
+            border-radius: 10px; 
+            margin-bottom: 5px; 
+            transition: 0.3s; 
+            text-decoration: none; 
+            display: flex; 
+            align-items: center; 
+            font-size: 0.9rem; 
+        }
+        .nav-link:hover { color: white; background: rgba(255,255,255,0.05); }
+        .nav-link.active { background: var(--accent-gold); color: black; font-weight: 600; }
+
+        /* --- MAIN CONTENT --- */
+        .main-content { flex: 1; padding: 30px; overflow-y: auto; }
+        
+        .stat-card { 
+            background: var(--card-dark); 
+            border-radius: 20px; 
+            border: 1px solid #333; 
+            padding: 25px; 
+            height: 100%;
+        }
+        .stat-label { font-size: 0.70rem; text-transform: uppercase; font-weight: 600; color: var(--text-muted); letter-spacing: 1px; }
+        .stat-value { font-size: 1.6rem; font-weight: 700; color: var(--text-main); margin-top: 5px; }
+
+        .chart-container { 
+            background: var(--card-dark); 
+            border-radius: 20px; 
+            border: 1px solid #333; 
+            padding: 30px; 
+            margin-top: 20px;
+        }
+
+        .btn-print { border: 1px solid #444; background: #1a1a1a; color: white; padding: 10px 25px; border-radius: 12px; transition: 0.3s; }
+        .btn-print:hover { border-color: var(--accent-gold); color: var(--accent-gold); }
+
+        @media print { .sidebar, .btn-print { display: none !important; } .main-content { padding: 0; } }
     </style>
 </head>
 <body>
 
 <div class="sidebar">
     <div class="mb-5 text-center">
-        <h4 class="fw-bold"><span style="color:var(--riverside-red)">Riverside</span> Café</h4>
-        <small class="text-muted">Analytics Panel</small>
+        <h4 class="fw-bold"><span style="color:var(--accent-gold)">Riverside</span> Café</h4>
+        <small class="text-white text-uppercase" style="font-size: 0.65rem; letter-spacing: 1px; opacity: 0.6;">Management System</small>
     </div>
+    
     <nav class="d-flex flex-column h-100">
-        <a href="<?= base_url('dashboard') ?>" class="nav-link <?= (uri_string() == 'dashboard') ? 'active' : '' ?>">
-            <i class="fas fa-chart-pie me-3"></i> Overview
-        </a>
-        <a href="<?= base_url('products') ?>" class="nav-link <?= (uri_string() == 'products') ? 'active' : '' ?>">
-            <i class="fas fa-coffee me-3"></i> Menu & Inventory
-        </a>
-        <a href="<?= base_url('pos') ?>" class="nav-link <?= (uri_string() == 'pos') ? 'active' : '' ?>">
-            <i class="fas fa-cash-register me-3"></i> Barista POS
-        </a>
-
-        <?php if (session()->get('role') === 'admin'): ?>
-            <a href="<?= base_url('sales') ?>" class="nav-link <?= (uri_string() == 'sales') ? 'active' : '' ?>">
-                <i class="fas fa-file-invoice-dollar me-3"></i> Sales Reports
+        <a href="<?= base_url('dashboard') ?>" class="nav-link"><i class="fas fa-th-large me-3"></i> Dashboard</a>
+        <a href="<?= base_url('products') ?>" class="nav-link"><i class="fas fa-coffee me-3"></i> Menu & Inventory</a>
+        <a href="<?= base_url('pos') ?>" class="nav-link"><i class="fas fa-cash-register me-3"></i> Barista POS</a>
+        <a href="<?= base_url('sales') ?>" class="nav-link active"><i class="fas fa-chart-line me-3"></i> Sales Analytics</a>
+        <a href="<?= base_url('auth/manage') ?>" class="nav-link <?= (uri_string() == 'auth/manage') ? 'active' : '' ?>">
+                <i class="fas fa-users me-3"></i> Manage Staff
             </a>
-            <hr class="text-secondary opacity-25 mx-3">
-            <p class="small text-muted px-3 mb-2" style="font-size: 0.65rem; letter-spacing: 1px;">ADMINISTRATION</p>
-            <a href="<?= base_url('auth/manage') ?>" class="nav-link <?= (uri_string() == 'auth/manage') ? 'active' : '' ?>">
-                <i class="fas fa-users-cog me-3"></i> Manage Staff
-            </a>
-        <?php endif; ?>
+        
+        <div class="mt-auto">
+            <a href="<?= base_url('logout') ?>" class="nav-link text-danger"><i class="fas fa-sign-out-alt me-3"></i> Logout</a>
+        </div>
     </nav>
-    <div class="mt-auto border-top pt-3">
-        <a href="<?= base_url('logout') ?>" class="nav-link text-danger"><i class="fas fa-sign-out-alt me-2"></i> Logout</a>
-    </div>
 </div>
 
 <div class="main-content">
-    <div class="d-md-flex justify-content-between align-items-center mb-4">
+    <div class="d-md-flex justify-content-between align-items-center mb-5">
         <div>
-            <h2 class="fw-bold mb-0">Sales Analytics</h2>
-            <p class="text-muted small mb-0">Reviewing revenue performance and growth trends.</p>
+            <h2 class="fw-bold mb-0 text-white">Sales Analytics</h2>
+            <p style="color: var(--text-muted);" class="small mb-0">Track your business growth and revenue performance.</p>
         </div>
         <button onclick="window.print()" class="btn btn-print shadow-sm">
-            <i class="fas fa-print me-2 text-primary"></i> Print Report
+            <i class="fas fa-print me-2"></i> Print Report
         </button>
     </div>
 
-    <div class="row g-4 mb-4">
-        <div class="col-md-4">
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
             <div class="stat-card">
-                <span class="stat-label">Today's Revenue</span>
+                <span class="stat-label">Daily Revenue</span>
                 <div class="stat-value text-success">₱<?= number_format($daily_revenue, 2) ?></div>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="stat-card">
-                <span class="stat-label">Monthly Orders</span>
-                <div class="stat-value text-primary"><?= number_format($monthly_orders) ?></div>
+        <div class="col-md-3">
+            <div class="stat-card" style="border-left: 4px solid var(--accent-gold);">
+                <span class="stat-label" style="color: var(--accent-gold);">Total Revenue</span>
+                <div class="stat-value">₱<?= number_format($total_revenue ?? 0, 2) ?></div>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="stat-card">
-                <span class="stat-label">Grand Total Orders</span>
-                <div class="stat-value text-dark"><?= number_format($total_orders) ?></div>
+                <span class="stat-label">Monthly Orders</span>
+                <div class="stat-value"><?= number_format($monthly_orders) ?></div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card">
+                <span class="stat-label">Lifetime Orders</span>
+                <div class="stat-value"><?= number_format($total_orders) ?></div>
             </div>
         </div>
     </div>
 
-    <div class="chart-container">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h6 class="fw-bold text-uppercase small text-muted mb-0">Revenue History (Last 7 Days)</h6>
-            
-            <?php if(!empty($chart_values)): ?>
-                <button id="toggleRevenue" class="btn chart-toggle-btn shadow-sm">
-                    <i class="fas fa-chart-line me-2"></i> Daily Revenue (₱)
-                </button>
-            <?php endif; ?>
-        </div>
+   <div class="chart-container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h6 class="fw-bold text-uppercase small text-white mb-0" style="letter-spacing: 1px; opacity: 0.9;">
+            Revenue Growth (7 Days)
+        </h6>
+        
+        <?php if(!empty($chart_values)): ?>
+            <span class="badge bg-dark border border-secondary text-warning">
+                <i class="fas fa-chart-line me-1"></i> Live Data
+            </span>
+        <?php endif; ?>
+    </div>
 
-        <div style="height: 350px;">
-            <?php if(!empty($chart_values)): ?>
-                <canvas id="salesChart"></canvas>
-            <?php else: ?>
-                <div class="d-flex align-items-center justify-content-center h-100 flex-column text-muted">
-                    <p>No sales data recorded.</p>
-                </div>
-            <?php endif; ?>
-        </div>
+    <div style="height: 350px; position: relative;">
+        <?php if(!empty($chart_values)): ?>
+            <canvas id="salesChart"></canvas>
+        <?php else: ?>
+            <div class="d-flex flex-column align-items-center justify-content-center h-100 opacity-25">
+                <i class="fas fa-folder-open fa-3x mb-3 text-white"></i>
+                <p class="text-white">No sales data available for the last 7 days.</p>
+            </div>
+        <?php endif; ?>
     </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
+    // Gamit ang PHP check para indi mag-run ang script kung wala sing data
     <?php if(!empty($chart_values)): ?>
-    const ctx = document.getElementById('salesChart').getContext('2d');
-    const salesChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: <?= json_encode($chart_labels) ?>,
-            datasets: [{
-                label: 'Daily Revenue (₱)',
-                data: <?= json_encode($chart_values) ?>,
-                borderColor: '#ff4d4d',
-                backgroundColor: 'rgba(255, 77, 77, 0.1)',
-                borderWidth: 3,
-                fill: true,
-                tension: 0.4,
-                pointRadius: 5,
-                pointBackgroundColor: '#ff4d4d'
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    display: false // Tinago natin yung default na square legend
-                }
-            },
-            scales: {
-                y: { 
-                    beginAtZero: true, 
-                    ticks: { callback: function(v) { return '₱' + v.toLocaleString(); } } 
-                }
-            }
-        }
-    });
+        document.addEventListener("DOMContentLoaded", function() {
+            const ctx = document.getElementById('salesChart').getContext('2d');
+            
+            // Premium Gold Gradient
+            const goldGradient = ctx.createLinearGradient(0, 0, 0, 400);
+            goldGradient.addColorStop(0, 'rgba(255, 204, 77, 0.3)');
+            goldGradient.addColorStop(1, 'rgba(255, 204, 77, 0)');
 
-    // Button Logic para sa Toggle
-    document.getElementById('toggleRevenue').addEventListener('click', function() {
-        const isVisible = salesChart.isDatasetVisible(0);
-        if (isVisible) {
-            salesChart.hide(0);
-            this.classList.add('hidden-data');
-            this.innerHTML = '<i class="fas fa-eye-slash me-2"></i> Show Revenue';
-        } else {
-            salesChart.show(0);
-            this.classList.remove('hidden-data');
-            this.innerHTML = '<i class="fas fa-chart-line me-2"></i> Daily Revenue (₱)';
-        }
-    });
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: <?= json_encode($chart_labels) ?>,
+                    datasets: [{
+                        label: 'Revenue (₱)',
+                        data: <?= json_encode($chart_values) ?>,
+                        borderColor: '#ffcc4d',
+                        backgroundColor: goldGradient,
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 5,
+                        pointBackgroundColor: '#ffcc4d',
+                        pointBorderColor: '#121212',
+                        pointHoverRadius: 7
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            backgroundColor: '#1a1a1a',
+                            titleColor: '#ffcc4d',
+                            bodyColor: '#fff',
+                            borderColor: '#333',
+                            borderWidth: 1
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                            ticks: { 
+                                color: '#b3b3b3',
+                                callback: function(value) { return '₱' + value.toLocaleString(); }
+                            }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: '#b3b3b3' }
+                        }
+                    }
+                }
+            });
+        });
     <?php endif; ?>
 </script>
 </body>

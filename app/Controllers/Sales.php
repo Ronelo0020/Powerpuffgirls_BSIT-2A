@@ -8,7 +8,6 @@ class Sales extends BaseController {
 
     public function index() {
         // --- SECURITY CHECK ---
-        // Sinisiguro nito na Admin lang ang makaka-access sa logic na ito.
         if (session()->get('role') !== 'admin') {
             return redirect()->to(base_url('dashboard'))->with('msg', 'Access denied.');
         }
@@ -16,33 +15,34 @@ class Sales extends BaseController {
         $orderModel = model(Order_model::class);
 
         // 1. Daily Revenue
-        // Gumamit tayo ng selectSum para mas malinis ang calculation ng total
         $daily = $orderModel->selectSum('total_amount')
                             ->where('DATE(order_date)', date('Y-m-d'))
                             ->first();
 
-        // 2. Monthly Orders
-        // Binibilang ang lahat ng successful transactions ngayong buwan
+        // 2. Overall Revenue (Lifetime Total)
+        // Dito natin kukunin ang lahat ng pera na pumasok kahit anong petsa
+        $overall = $orderModel->selectSum('total_amount')->first();
+
+        // 3. Monthly Orders
         $monthlyCount = $orderModel->where('MONTH(order_date)', date('m'))
                                    ->where('YEAR(order_date)', date('Y'))
                                    ->countAllResults();
 
-        // 3. Total Transactions (Grand Total)
+        // 4. Total Transactions (Grand Total count)
         $totalTransactions = $orderModel->countAllResults();
 
-        // 4. Data para sa Chart (Last 7 Days Sales)
-        // FIX: Inayos ang GROUP BY sa DATE(order_date) para hindi mag-merge ang sales 
-        // kung sakaling magka-record sa parehong araw pero magkaibang taon.
+        // 5. Data para sa Chart (Last 7 Days Sales)
         $chartData = $orderModel->select("DATE_FORMAT(order_date, '%D %b') as day, SUM(total_amount) as amount, DATE(order_date) as full_date")
-                                ->where('order_date >=', date('Y-m-d', strtotime('-7 days'))) // FIX: Kukuha lang ng huling 7 araw
+                                ->where('order_date >=', date('Y-m-d', strtotime('-7 days')))
                                 ->groupBy('full_date')
                                 ->orderBy('full_date', 'ASC')
                                 ->findAll();
 
         $data = [
             'daily_revenue'  => $daily['total_amount'] ?? 0,
+            'total_revenue'  => $overall['total_amount'] ?? 0, // NEW: Kabuuang kita
             'monthly_orders' => $monthlyCount,
-            'total_orders'   => $totalTransactions, // Variable name changed to be more accurate
+            'total_orders'   => $totalTransactions,
             'chart_labels'   => array_column($chartData, 'day'),
             'chart_values'   => array_column($chartData, 'amount'),
             'title'          => 'Riverside | Sales Analytics'

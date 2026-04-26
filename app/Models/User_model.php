@@ -7,8 +7,8 @@ class User_model extends Model {
     protected $table      = 'users';
     protected $primaryKey = 'id';
 
-    // FIX: Kinahanglan gid idugang ang 'duty_day' diri para makasulod sa database
-    protected $allowedFields = ['name', 'username', 'email', 'password', 'role', 'duty_day', 'created_at', 'updated_at'];
+    // FIX: Gindugangan sang 'profile_pic' para ma-save ang image filename
+    protected $allowedFields = ['name', 'username', 'email', 'password', 'role', 'duty_day', 'phone', 'profile_pic', 'created_at', 'updated_at'];
 
     protected $useTimestamps = true;
     protected $createdField  = 'created_at';

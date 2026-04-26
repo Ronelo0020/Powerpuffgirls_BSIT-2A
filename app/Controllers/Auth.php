@@ -58,26 +58,20 @@ class Auth extends BaseController {
             return redirect()->back()->with('msg', 'Email not found.');
         }
     }
-
-    public function manage() {
-        $session = session();
-        if ($session->get('role') != 'admin') {
-            return redirect()->to(base_url('dashboard'));
-        }
-
-        $model = new User_model();
-        $db = \Config\Database::connect();
-
-        $data['staff_members'] = $model->where('role', 'staff')->findAll();
-        
-        $data['duty_logs'] = $db->table('staff_logs')
-                                ->where('staff_name !=', 'Riverside Cafe') 
-                                ->orderBy('login_time', 'DESC')
-                                ->get()
-                                ->getResultArray();
-
-        return view('auth/manage_staff', $data); 
+public function manage() {
+    $session = session();
+    if ($session->get('role') != 'admin') {
+        return redirect()->to(base_url('dashboard'));
     }
+
+    $model = new User_model();
+    
+    // Separar nga query para sa Admin kag Staff
+    $data['admins'] = $model->where('role', 'admin')->findAll();
+    $data['staff_members'] = $model->where('role', 'staff')->orderBy('name', 'ASC')->findAll();
+
+    return view('auth/manage_staff', $data); 
+}
 
     public function logout() {
         $session = session();
@@ -131,22 +125,54 @@ class Auth extends BaseController {
         return view('auth/edit_staff', $data);
     }
 
-    // Pag-update sang staff details (pati ang Schedule)
+    // FIXED: Updated Update Function para sa Image Upload
     public function update($id) {
         $model = new User_model();
+        
+        // 1. Prepare base data
         $data = [
             'name'     => $this->request->getPost('name'),
             'email'    => $this->request->getPost('email'),
             'role'     => $this->request->getPost('role'),
-            'duty_day' => $this->request->getPost('duty_day') // FIX: Siguraduhon nga makuha ang data halin sa view
+            'duty_day' => $this->request->getPost('duty_day'),
+            'phone'    => $this->request->getPost('phone'),
         ];
+
+        // 2. Handle Image Upload
+        $file = $this->request->getFile('profile_pic');
+
+        if ($file && $file->isValid() && !$file->hasMoved()) {
+            // Mag-generate sang random name para indi mag-duplicate
+            $newName = $file->getRandomName();
+            
+            // I-move sa public/uploads/profiles
+            if ($file->move(FCPATH . 'uploads/profiles', $newName)) {
+                $data['profile_pic'] = $newName;
+                
+                // (Optional) Delete ang old picture para matinlo ang storage
+                $old_data = $model->find($id);
+                if (!empty($old_data['profile_pic']) && file_exists(FCPATH . 'uploads/profiles/' . $old_data['profile_pic'])) {
+                    unlink(FCPATH . 'uploads/profiles/' . $old_data['profile_pic']);
+                }
+            }
+        }
         
-        $model->update($id, $data);
-        return redirect()->to(base_url('auth/manage'))->with('msg', 'Updated Successfully!');
+        if ($model->update($id, $data)) {
+            return redirect()->to(base_url('auth/manage'))->with('msg', 'Updated Successfully!');
+        } else {
+            return redirect()->back()->with('msg', 'Update Failed!');
+        }
     }
 
     public function delete($id) {
         $model = new User_model();
+        
+        // Delete man ang profile pic sa folder kung mag-delete staff
+        $staff = $model->find($id);
+        if (!empty($staff['profile_pic']) && file_exists(FCPATH . 'uploads/profiles/' . $staff['profile_pic'])) {
+            unlink(FCPATH . 'uploads/profiles/' . $staff['profile_pic']);
+        }
+
         $model->delete($id);
         return redirect()->to(base_url('auth/manage'))->with('msg', 'Staff Deleted!');
     }

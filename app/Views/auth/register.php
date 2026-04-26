@@ -30,14 +30,14 @@
             border-radius: 24px;
             padding: 40px;
             width: 100%;
-            max-width: 420px;
+            max-width: 450px; /* Gin-adjust gamay para sa dugang nga fields */
             box-shadow: 0 25px 50px rgba(0,0,0,0.6);
             color: white;
         }
 
         .brand-header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
 
         .brand-title {
@@ -69,9 +69,9 @@
 
         .form-control, .form-select {
             border-radius: 12px;
-            padding: 12px 16px;
+            padding: 10px 16px;
             font-size: 0.9rem;
-            margin-bottom: 18px;
+            margin-bottom: 15px;
             border: none;
             transition: 0.3s ease;
         }
@@ -79,6 +79,12 @@
         .input-white {
             background: #ffffff !important;
             color: #1a1a1a !important;
+        }
+
+        /* Style para sa File Input */
+        .form-control[type="file"] {
+            padding: 8px 12px;
+            cursor: pointer;
         }
 
         .btn-register {
@@ -144,7 +150,7 @@
             </div>
         <?php endif; ?>
 
-        <form action="<?= base_url('auth/store') ?>" method="POST">
+        <form action="<?= base_url('auth/store') ?>" method="POST" enctype="multipart/form-data">
             <?= csrf_field() ?>
 
             <div class="mb-1">
@@ -157,12 +163,32 @@
                 <input type="email" name="email" class="form-control input-white" placeholder="staff@gmail.com" required>
             </div>
 
+            <div class="row g-2">
+                <div class="col-md-6 mb-1">
+                    <label class="form-label">Role</label>
+                    <select name="role" class="form-select input-white" required>
+                        <option value="staff" selected>Staff</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+                <div class="col-md-6 mb-1">
+                    <label class="form-label">Duty Day</label>
+                    <select name="duty_day" class="form-select input-white">
+                        <option value="Monday">Monday</option>
+                        <option value="Tuesday">Tuesday</option>
+                        <option value="Wednesday">Wednesday</option>
+                        <option value="Thursday">Thursday</option>
+                        <option value="Friday">Friday</option>
+                        <option value="Saturday">Saturday</option>
+                        <option value="Sunday">Sunday</option>
+                        <option value="Everyday">Everyday</option>
+                    </select>
+                </div>
+            </div>
+
             <div class="mb-1">
-                <label class="form-label">Role</label>
-                <select name="role" class="form-select input-white" required>
-                    <option value="staff" selected>Staff</option>
-                    <option value="admin">Admin</option>
-                </select>
+                <label class="form-label">Profile Picture</label>
+                <input type="file" name="profile_pic" class="form-control input-white" accept="image/*">
             </div>
 
             <div class="mb-1">
@@ -180,4 +206,3 @@
 
 </body>
 </html>
-<!-- // Final update by Irish Ann -->

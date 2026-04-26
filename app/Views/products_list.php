@@ -10,45 +10,69 @@
     
     <style>
         :root { 
-            --riverside-red: #ff4d4d; 
-            --sidebar-bg: #212529; 
-            --body-bg: #f4f7f6; 
+            /* Dashboard Dark Theme Colors */
+            --riverside-yellow: #ffcc4d; 
+            --sidebar-bg: #000000; 
+            --body-bg: #0b0b0b; 
+            --card-bg: #111111;
+            --text-main: #ffffff;
+            --text-muted: #a0a0a0;
+            --border-color: #222222;
         }
         
-        body { background-color: var(--body-bg); font-family: 'Poppins', sans-serif; display: flex; min-height: 100vh; margin: 0; }
+        body { 
+            background-color: var(--body-bg); 
+            font-family: 'Poppins', sans-serif; 
+            display: flex; 
+            min-height: 100vh; 
+            margin: 0; 
+            color: var(--text-main);
+        }
 
+        /* Sidebar Styling */
         .sidebar { 
             width: 260px; 
             background: var(--sidebar-bg); 
             padding: 30px 20px; 
             display: flex; 
             flex-direction: column; 
-            color: white; 
             position: fixed; 
             height: 100vh; 
+            border-right: 1px solid var(--border-color);
         }
 
-        .main-content { flex: 1; margin-left: 260px; padding: 40px; width: calc(100% - 260px); }
+        .main-content { 
+            flex: 1; 
+            margin-left: 260px; 
+            padding: 40px; 
+            width: calc(100% - 260px); 
+        }
 
         .nav-link { 
-            color: rgba(255,255,255,0.7); 
+            color: var(--text-muted); 
             padding: 12px 15px; 
-            border-radius: 10px; 
+            border-radius: 8px; 
             margin-bottom: 5px; 
             transition: 0.3s; 
             text-decoration: none; 
             display: flex; 
             align-items: center; 
+            font-weight: 500;
         }
-        .nav-link:hover, .nav-link.active { background: rgba(255,255,255,0.1); color: var(--riverside-red); }
+        
+        /* Dashboard Yellow Active State */
+        .nav-link:hover, .nav-link.active { 
+            background: var(--riverside-yellow); 
+            color: #000; 
+        }
 
+        /* Inventory Cards */
         .category-card {
-            border: none;
-            border-radius: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
             margin-bottom: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
             overflow: hidden;
-            background: #fff;
+            background: var(--card-bg);
         }
 
         .category-header {
@@ -57,47 +81,65 @@
             justify-content: space-between;
             align-items: center;
             cursor: pointer;
-            border-left: 6px solid var(--riverside-red);
+            transition: background 0.2s;
         }
-        .category-header:hover { background: #fafafa; }
-        .category-title { font-weight: 600; color: #333; font-size: 1.1rem; margin: 0; }
+        
+        .category-header:hover { background: #1a1a1a; }
+        .category-title { font-weight: 600; color: var(--text-main); font-size: 1.1rem; margin: 0; }
 
         .item-row {
             padding: 15px 25px;
-            border-top: 1px solid #f0f0f0;
+            border-top: 1px solid var(--border-color);
             display: flex;
             align-items: center;
             justify-content: space-between;
         }
-        .item-name { font-weight: 500; color: #2c3e50; margin-bottom: 2px; }
-        .sku-label { font-size: 0.8rem; color: #999; }
-
-        .price-tag { color: var(--riverside-red); font-weight: 700; font-size: 0.95rem; }
-        .stock-indicator { font-size: 0.75rem; font-weight: 600; padding: 6px 12px; border-radius: 20px; }
         
+        .item-name { font-weight: 500; color: var(--text-main); margin-bottom: 2px; }
+        .sku-label { font-size: 0.8rem; color: var(--text-muted); }
+
+        .price-tag { color: var(--riverside-yellow); font-weight: 700; font-size: 0.95rem; }
+        
+        /* Status Badges */
+        .stock-indicator { font-size: 0.75rem; font-weight: 600; padding: 6px 12px; border-radius: 20px; }
+        .bg-success-subtle { background: rgba(40, 167, 69, 0.1) !important; color: #28a745 !important; border: 1px solid rgba(40, 167, 69, 0.2); }
+        .bg-danger-subtle { background: rgba(220, 53, 69, 0.1) !important; color: #dc3545 !important; border: 1px solid rgba(220, 53, 69, 0.2); }
+
+        /* Action Buttons */
         .btn-action-circle {
             width: 35px; height: 35px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;
-            transition: 0.3s; border: 1px solid #eee; background: #fff; color: #666; text-decoration: none;
+            transition: 0.3s; border: 1px solid var(--border-color); background: #222; color: var(--text-muted); text-decoration: none;
         }
-        .btn-action-circle:hover { background: var(--riverside-red); color: #fff; border-color: var(--riverside-red); }
+        .btn-action-circle:hover { background: var(--riverside-yellow); color: #000; border-color: var(--riverside-yellow); }
 
-        .btn-add { background: var(--riverside-red); color: #fff; padding: 10px 20px; border-radius: 12px; font-weight: 600; text-decoration: none; }
+        .btn-add { 
+            background: var(--riverside-yellow); 
+            color: #000; 
+            padding: 10px 20px; 
+            border-radius: 8px; 
+            font-weight: 600; 
+            text-decoration: none; 
+            transition: 0.3s;
+        }
+        .btn-add:hover { background: #e6b845; color: #000; }
+
+        .text-muted { color: var(--text-muted) !important; }
     </style>
 </head>
 <body>
 
 <div class="sidebar">
-    <div class="mb-5 text-center">
-        <h4 class="fw-bold"><span style="color:var(--riverside-red)">Riverside</span> Café</h4>
-        <small class="text-muted">Inventory Admin</small>
+    <div class="mb-5 px-3">
+        <h4 class="fw-bold"><span style="color:var(--riverside-yellow)">Riverside</span> Café</h4>
+        <small class="text-muted">Admin Terminal</small>
     </div>
 
     <nav class="d-flex flex-column h-100">
         <a href="<?= base_url('dashboard') ?>" class="nav-link <?= (uri_string() == 'dashboard') ? 'active' : '' ?>">
-            <i class="fas fa-chart-pie me-3"></i> Overview
+            <i class="fas fa-th-large me-3"></i> Dashboard
         </a>
         <a href="<?= base_url('products') ?>" class="nav-link <?= (uri_string() == 'products') ? 'active' : '' ?>">
-            <i class="fas fa-coffee me-3"></i> Menu & Inventory
+            <i class="fas fa-box me-3"></i> Menu & Inventory
         </a>
         <a href="<?= base_url('pos') ?>" class="nav-link <?= (uri_string() == 'pos') ? 'active' : '' ?>">
             <i class="fas fa-cash-register me-3"></i> Barista POS
@@ -105,19 +147,18 @@
 
         <?php if(session()->get('role') == 'admin'): ?>
             <hr class="text-secondary opacity-25 mx-3">
-            <p class="small text-muted px-3 mb-2" style="font-size: 0.65rem; letter-spacing: 1px;">ADMINISTRATION</p>
             <a href="<?= base_url('sales') ?>" class="nav-link <?= (uri_string() == 'sales') ? 'active' : '' ?>">
-                <i class="fas fa-file-invoice-dollar me-3"></i> Sales Reports
+                <i class="fas fa-chart-line me-3"></i> Sales Analytics
             </a>
             <a href="<?= base_url('auth/manage') ?>" class="nav-link <?= (uri_string() == 'auth/manage') ? 'active' : '' ?>">
-                <i class="fas fa-users-cog me-3"></i> Manage Staff
+                <i class="fas fa-users me-3"></i> Manage Staff
             </a>
         <?php endif; ?>
     </nav>
 
-    <div class="mt-auto border-top border-secondary pt-3 px-2">
-        <a href="<?= base_url('auth/logout') ?>" class="nav-link text-danger p-0">
-            <i class="fas fa-sign-out-alt me-2"></i> Logout
+    <div class="mt-auto border-top border-secondary pt-3">
+        <a href="<?= base_url('logout') ?>" class="nav-link text-danger">
+            <i class="fas fa-sign-out-alt me-3"></i> Logout 
         </a>
     </div>
 </div>
@@ -126,10 +167,10 @@
     <div class="d-flex justify-content-between align-items-center mb-5">
         <div>
             <h2 class="fw-bold">Menu & Inventory</h2>
-            <p class="text-muted">Monitor stocks and manage product details</p>
+            <p class="text-muted">Precision management for Riverside Café's product lineup.</p>
         </div>
         <a href="<?= base_url('products/add') ?>" class="btn-add shadow-sm">
-            <i class="fas fa-plus me-2"></i> Add New Product
+            <i class="fas fa-plus me-2"></i> Add New Item
         </a>
     </div>
 
@@ -149,7 +190,7 @@
                 <div class="d-flex align-items-center">
                     <i class="fas fa-folder text-muted me-3"></i>
                     <h5 class="category-title"><?= strtoupper($category) ?></h5>
-                    <span class="badge bg-light text-dark border ms-3" style="font-size: 0.7rem;"><?= count($items) ?> items</span>
+                    <span class="badge bg-dark text-muted border border-secondary ms-3" style="font-size: 0.7rem;"><?= count($items) ?> items</span>
                 </div>
                 <i class="fas fa-chevron-down text-muted"></i>
             </div>
@@ -160,7 +201,7 @@
                     <div class="item-row">
                         <div style="flex: 2;">
                             <div class="item-name"><?= $item['product_name'] ?></div>
-                            <small class="sku-label">SKU: #<?= $item['id'] ?></small>
+                            <small class="sku-label">ID: #<?= $item['id'] ?></small>
                         </div>
                         
                         <div style="flex: 1;" class="text-center">
@@ -169,33 +210,28 @@
 
                         <div style="flex: 1;" class="text-center">
                             <?php if($item['stock'] <= 0): ?>
-                                <span class="stock-indicator bg-danger-subtle text-danger border border-danger">OUT OF STOCK</span>
+                                <span class="stock-indicator bg-danger-subtle">OUT OF STOCK</span>
                             <?php elseif($item['stock'] <= 5): ?>
-                                <span class="stock-indicator bg-danger text-white shadow-sm">
-                                    <i class="fas fa-exclamation-triangle me-1"></i> <?= $item['stock'] ?> Low Stock
+                                <span class="stock-indicator bg-danger text-white">
+                                    <i class="fas fa-exclamation-triangle me-1"></i> <?= $item['stock'] ?> LOW STOCK
                                 </span>
                             <?php else: ?>
-                                <span class="stock-indicator bg-success-subtle text-success">
-                                    <i class="fas fa-check-circle me-1"></i> <?= $item['stock'] ?> Units
+                                <span class="stock-indicator bg-success-subtle">
+                                    <?= $item['stock'] ?> UNITS
                                 </span>
                             <?php endif; ?>
                         </div>
 
                         <div style="flex: 1;" class="text-end">
-                            <a href="<?= base_url('products/edit/'.$item['id']) ?>" class="btn-action-circle me-1" title="Edit"><i class="fas fa-pen fa-sm"></i></a>
-                            <a href="<?= base_url('products/delete/'.$item['id']) ?>" class="btn-action-circle text-danger" title="Delete" onclick="return confirm('Are you sure?')"><i class="fas fa-trash-alt fa-sm"></i></a>
+                            <a href="<?= base_url('products/edit/'.$item['id']) ?>" class="btn-action-circle me-1"><i class="fas fa-pen fa-sm"></i></a>
+                            <a href="<?= base_url('products/delete/'.$item['id']) ?>" class="btn-action-circle text-danger" onclick="return confirm('Are you sure?')"><i class="fas fa-trash-alt fa-sm"></i></a>
                         </div>
                     </div>
                     <?php endforeach; ?>
                 </div>
             </div>
         </div>
-        <?php endforeach; if(empty($grouped)): ?>
-            <div class="text-center py-5">
-                <i class="fas fa-box-open fa-3x text-muted mb-3"></i>
-                <p class="text-muted">No products found in the inventory.</p>
-            </div>
-        <?php endif; ?>
+        <?php endforeach; ?>
     </div>
 </div>
 
