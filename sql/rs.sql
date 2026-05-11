@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 26, 2026 at 07:17 AM
+-- Generation Time: May 11, 2026 at 10:11 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -44,13 +44,14 @@ CREATE TABLE `orders` (
 --
 
 INSERT INTO `orders` (`id`, `user_id`, `payment_method`, `gcash_reference`, `payment_screenshot`, `total_amount`, `payment`, `change_amount`, `order_date`) VALUES
-(1, 5, 'Cash', NULL, NULL, 130.00, NULL, NULL, '2026-04-20 01:52:18'),
-(2, 5, 'Cash', NULL, NULL, 265.00, NULL, NULL, '2026-04-20 01:52:33'),
-(3, 5, 'Cash', NULL, NULL, 110.00, NULL, NULL, '2026-04-20 02:34:02'),
-(4, 5, 'Cash', NULL, NULL, 125.00, NULL, NULL, '2026-04-21 03:39:08'),
-(5, 11, 'Cash', NULL, NULL, 330.00, 500.00, 170.00, '2026-04-23 04:37:01'),
-(6, 11, 'Cash', NULL, NULL, 540.00, 1000.00, NULL, '2026-04-23 13:37:12'),
-(7, 11, 'Cash', NULL, NULL, 90.00, 100.00, NULL, '2026-04-23 13:55:29');
+(1, 5, 'Cash', NULL, NULL, 405.00, 500.00, NULL, '2026-05-11 07:05:39'),
+(2, 5, 'Cash', NULL, NULL, 185.00, 200.00, NULL, '2026-05-11 07:11:33'),
+(3, 5, 'Cash', NULL, NULL, 250.00, 400.00, NULL, '2026-05-11 07:14:56'),
+(4, 5, 'Cash', NULL, NULL, 250.00, 500.00, NULL, '2026-05-11 07:17:20'),
+(5, 5, 'Cash', NULL, NULL, 500.00, 500.00, NULL, '2026-05-11 07:19:56'),
+(6, 5, 'Cash', NULL, NULL, 255.00, 400.00, NULL, '2026-05-11 07:20:12'),
+(7, 5, 'Cash', NULL, NULL, 49.00, 50.00, 1.00, '2026-05-11 07:50:59'),
+(8, 5, 'GCash', '0021556789123', NULL, 90.00, 90.00, 0.00, '2026-05-11 08:00:55');
 
 -- --------------------------------------------------------
 
@@ -71,16 +72,14 @@ CREATE TABLE `order_items` (
 --
 
 INSERT INTO `order_items` (`id`, `order_id`, `product_id`, `quantity`, `price`) VALUES
-(1, 1, 5, 1, 85.00),
-(2, 1, 4, 1, 45.00),
-(3, 2, 4, 1, 45.00),
-(4, 2, 5, 1, 85.00),
-(5, 2, 3, 1, 135.00),
-(6, 3, 2, 1, 110.00),
-(7, 4, 29, 1, 125.00),
-(8, 5, 2, 3, 110.00),
-(9, 6, 3, 4, 135.00),
-(10, 7, 4, 2, 45.00);
+(1, 1, 3, 3, 135.00),
+(2, 2, 9, 1, 185.00),
+(3, 3, 10, 2, 125.00),
+(4, 4, 10, 2, 125.00),
+(5, 5, 10, 4, 125.00),
+(6, 6, 22, 3, 85.00),
+(7, 7, 7, 1, 49.00),
+(8, 8, 4, 2, 45.00);
 
 -- --------------------------------------------------------
 
@@ -102,14 +101,14 @@ CREATE TABLE `products` (
 --
 
 INSERT INTO `products` (`id`, `product_name`, `price`, `category`, `stock`, `image`) VALUES
-(2, 'Cappuccino', 110.00, 'Coffee', 25, 'Cappuccino.jpg'),
-(3, 'Spanish Latte', 135.00, 'Coffee', 20, 'Spanish Latte.jpg'),
-(4, 'Chocolate Cookie', 45.00, 'Snacks', 10, 'Chocolate Cookie .jpg'),
-(5, 'Clubhouse Sandwich', 85.00, 'Hot Coffee', 8, 'Clubhouse_Sandwich.jpg'),
-(7, 'Hot Brewed Coffee', 49.00, 'Hot Coffee', 10, 'Hot_Brewed_Coffee.jpg'),
-(8, 'Paa Combo (w/ Drinks)', 155.00, 'Hot Coffee', 23, 'paa combo.jpg'),
-(9, 'Pecho Combo (w/ Drinks)', 185.00, 'Combo Meals', 20, 'Pecho Combo.png'),
-(10, 'Fried Chicken Combo (w/ Drinks)', 125.00, 'Combo Meals', 20, 'Fried_Chicken.jpg'),
+(2, 'Cappuccino', 115.00, 'Coffee', 25, 'Cappuccino.jpg'),
+(3, 'Spanish Latte', 135.00, 'Coffee', 15, 'Spanish Latte.jpg'),
+(4, 'Chocolate Cookie', 45.00, 'Favorites', 13, 'Chocolate Cookie .jpg'),
+(5, 'Clubhouse Sandwich', 85.00, 'Hot Coffee', 0, 'Clubhouse_Sandwich.jpg'),
+(7, 'Hot Brewed Coffee', 49.00, 'Hot Drinks', 4, 'Hot_Brewed_Coffee.jpg'),
+(8, 'Paa Combo (w/ Drinks)', 155.00, 'Combo Meals', 20, 'paa combo.jpg'),
+(9, 'Pecho Combo (w/ Drinks)', 185.00, 'Combo Meals', 15, 'Pecho Combo.png'),
+(10, 'Fried Chicken Combo (w/ Drinks)', 125.00, 'Combo Meals', 4, 'Fried_Chicken.jpg'),
 (11, 'Fried Porkchop Combo (w/ Drinks)', 130.00, 'Combo Meals', 20, 'Fried_Porkchop.jpg'),
 (12, 'Pecho (No Drinks)', 105.00, 'Combo Meals', 20, 'Pecho.jpg'),
 (13, 'Fried Chicken (No Drinks)', 110.00, 'Combo Meals', 20, 'Fried_Chicken_Solo.jpg'),
@@ -121,18 +120,18 @@ INSERT INTO `products` (`id`, `product_name`, `price`, `category`, `stock`, `ima
 (19, 'Grilled Ham & Cheese', 65.00, 'Sandwiches', 30, 'Grilled Ham & Cheese.jpg'),
 (20, 'Grilled Ham & Cheese w/ Egg', 80.00, 'Sandwiches', 30, 'Grilled Ham & Cheese wEgg.jpg'),
 (21, 'Hotdog Sandwich', 50.00, 'Sandwiches', 30, 'Hotdog Sandwich (Even Long) .jpg'),
-(22, 'Tapsilog', 85.00, 'Silog Meals', 25, 'Tapsilog.jpg'),
+(22, 'Tapsilog', 85.00, 'Silog Meals', 20, 'Tapsilog.jpg'),
 (23, 'Hamsilog', 40.00, 'Silog Meals', 25, 'Hamsilog.jpg'),
 (24, 'Hotsilog', 15.00, 'Silog Meals', 25, 'Hotsilog.jpg'),
 (25, 'Cornsilog', 69.00, 'Silog Meals', 25, 'Cornsilog.jpg'),
-(26, 'Hotdog Silog', 70.00, 'Hot Coffee', 34, 'Hotdog silog.jpg'),
+(26, 'Hotdog Silog', 70.00, 'Silog Meals', 33, 'Hotdog silog.jpg'),
 (27, 'Lumsilog', 85.00, 'Silog Meals', 25, 'lumsilog.jpg'),
 (28, 'Porksilog', 125.00, 'Silog Meals', 25, 'Porksilog.jpg'),
 (29, 'Chicksilog', 125.00, 'Silog Meals', 24, 'Chicksilog.jpg'),
 (30, 'Burger w/ Fries Combo', 125.00, 'Combo Snacks', 15, 'WITH FREE Blue Lemonade Burger w Fries.jpg'),
 (31, 'Hotdog w/ Fries Combo', 125.00, 'Combo Snacks', 15, 'WITH FREE Lemonade Hotdog w Fries.jpg'),
 (32, 'Lumpia w/ Fries Combo', 115.00, 'Combo Snacks', 15, 'lumsilog.jpg'),
-(33, 'Fries', 45.00, 'Favorites', 40, 'Fries.jpg'),
+(33, 'Fries', 45.00, 'Favorites', 50, 'Fries.jpg'),
 (34, 'Lumpia Shanghai', 60.00, 'Favorites', 40, 'Lumpia Shanghai.jpg'),
 (35, 'Tacos', 69.00, 'Favorites', 30, 'Tacos.jpg'),
 (36, 'Taco Fries', 95.00, 'Favorites', 30, 'Taco Fries.jpg'),
@@ -141,16 +140,19 @@ INSERT INTO `products` (`id`, `product_name`, `price`, `category`, `stock`, `ima
 (39, 'Bihon Guisado (4pax)', 120.00, 'Special Menu', 10, 'Biho Guisado.jpg'),
 (40, 'Pancit Guisado (4pax)', 160.00, 'Special Menu', 10, 'Pancit Guisado.jpg'),
 (41, 'Chicken Lomi', 160.00, 'Special Menu', 10, 'Chicken Lomi.jpg'),
-(42, 'Brewed Coffee', 40.00, 'Hot Drinks', 50, 'Brewed Coffee.jpg'),
+(42, 'Brewed Coffee', 40.00, 'Hot Drinks', 49, 'Brewed Coffee.jpg'),
 (43, 'Coffee w/ Milk', 45.00, 'Hot Drinks', 50, 'Coffee w Milk.jpg'),
 (44, 'Hot Milo', 35.00, 'Hot Drinks', 50, 'Hot Milo .jpg'),
-(45, 'Hot Milk', 30.00, 'Hot Drinks', 50, 'Hot Milk .webp'),
+(45, 'Hot Milk', 30.00, 'Hot Drinks', 49, 'Hot Milk .webp'),
 (46, '3 in 1 Coffee', 20.00, 'Hot Drinks', 100, '3 in 1 Coffee.jpg'),
 (47, 'Iced Choco', 40.00, 'Refreshments', 40, 'Iced Choco.jpg'),
-(48, 'Iced Coffee', 40.00, 'Hot Coffee', 4, 'Iced Coffee.jpg'),
+(48, 'Iced Coffee', 40.00, 'Refreshments', 2, 'Iced Coffee.jpg'),
 (49, 'Bottled Water', 40.00, 'Refreshments', 50, 'Bottled_Water.jpg'),
-(50, 'Soft Drinks', 25.00, 'Refreshments', 100, 'Soft Drinks (Mt. Dew, Pepsi, Tropicana, Sting)(1).jpg'),
-(51, 'Lemonade Glass', 40.00, 'Refreshments', 34, 'Lemonade Glass .jpg');
+(50, 'Soft Drinks', 25.00, 'Refreshments', 95, 'Soft Drinks (Mt. Dew, Pepsi, Tropicana, Sting)(1).jpg'),
+(51, 'Lemonade Glass', 40.00, 'Refreshments', 34, 'Lemonade Glass .jpg'),
+(59, 'Matcha', 39.00, 'Refreshments', 25, 'matcha.jpg'),
+(60, 'Vanilla Latte', 120.00, 'Coffee', 15, 'vanilla_latte.jpg'),
+(61, 'Iced Tea', 35.00, 'Refreshments', 40, 'Iced_Teas.jpg');
 
 -- --------------------------------------------------------
 
@@ -172,25 +174,48 @@ CREATE TABLE `staff_logs` (
 --
 
 INSERT INTO `staff_logs` (`id`, `staff_name`, `login_time`, `logout_time`, `duration`, `status`) VALUES
-(1, 'Riverside Cafe Admin', '2026-04-20 09:45:28', '2026-04-20 09:45:49', '0 hrs 0 mins', 'Out'),
 (2, 'Riverside Cafe Admin', '2026-04-20 09:45:43', '2026-04-20 10:13:43', '0 hrs 28 mins', 'Out'),
-(3, 'Sabrina Carpenter', '2026-04-20 09:48:02', NULL, NULL, 'On Duty'),
+(3, 'Sabrina Carpenter', '2026-04-20 09:48:02', NULL, 'Unknown', 'On Duty'),
 (4, 'Riverside Cafe Admin', '2026-04-20 10:27:36', NULL, NULL, 'On Duty'),
 (5, 'Riverside Cafe Admin', '2026-04-20 11:03:58', '2026-04-20 11:07:34', '0 hrs 3 mins', 'Out'),
 (6, 'Riverside Cafe Admin', '2026-04-20 11:09:20', '2026-04-20 11:13:32', '0 hrs 4 mins', 'Out'),
-(7, 'Riverside Cafe Admin', '2026-04-20 11:13:35', '2026-04-20 11:13:38', '0 hrs 0 mins', 'Out'),
 (8, 'Riverside Cafe Admin', '2026-04-20 11:14:05', NULL, NULL, 'On Duty'),
 (9, 'Riverside Cafe Admin', '2026-04-21 11:09:35', NULL, NULL, 'On Duty'),
-(10, 'Glenn Magada Azuelo', '2026-04-22 13:15:18', NULL, NULL, 'On Duty'),
-(11, 'Glenn Magada Azuelo', '2026-04-22 22:43:03', NULL, NULL, 'On Duty'),
-(12, 'Glenn Magada Azuelo', '2026-04-23 12:36:15', NULL, NULL, 'On Duty'),
-(13, 'Glenn Magada Azuelo', '2026-04-23 21:28:25', NULL, NULL, 'On Duty'),
 (14, 'Riverside Cafe Admin', '2026-04-24 21:32:51', NULL, NULL, 'On Duty'),
-(15, 'Glenn Magada Azuelo', '2026-04-24 22:10:52', '2026-04-24 22:24:42', '0 hrs 13 mins', 'Out'),
-(16, 'Glenn Magada Azuelo', '2026-04-24 22:44:59', NULL, NULL, 'On Duty'),
-(17, 'Glenn Magada Azuelo', '2026-04-25 21:36:10', NULL, NULL, 'On Duty'),
-(18, 'Glenn Magada Azuelo', '2026-04-26 10:10:53', NULL, NULL, 'On Duty'),
-(19, 'Glenn Magada Azuelo', '2026-04-26 11:21:24', NULL, NULL, 'On Duty');
+(20, 'Riverside Cafe Admin', '2026-04-26 19:27:26', '2026-04-26 20:31:19', '1 hrs 3 mins', 'Out'),
+(21, 'Riverside Cafe Admin', '2026-04-26 20:39:22', '2026-04-26 20:44:47', '0 hrs 5 mins', 'Out'),
+(22, 'Sabrina Carpenter', '2026-04-26 20:44:54', NULL, NULL, 'On Duty'),
+(23, 'Riverside Cafe Admin', '2026-04-26 21:07:54', NULL, NULL, 'On Duty'),
+(24, 'Sabrina Carpenter', '2026-04-27 09:40:42', NULL, NULL, 'On Duty'),
+(26, 'Riverside Cafe Admin', '2026-04-27 09:42:13', NULL, NULL, 'On Duty'),
+(27, 'Sabrina Carpenter', '2026-04-27 09:50:16', NULL, NULL, 'On Duty'),
+(28, 'Riverside Cafe Admin', '2026-04-27 19:40:57', NULL, NULL, 'On Duty'),
+(29, 'Riverside Cafe Admin', '2026-05-01 07:27:37', NULL, NULL, 'On Duty'),
+(30, 'Riverside Cafe Admin', '2026-05-01 08:59:22', '2026-05-02 21:07:11', NULL, 'Out'),
+(31, 'Riverside Cafe Admin', '2026-05-02 19:47:56', NULL, NULL, 'On Duty'),
+(32, 'Ronelo Mabayag Dacillo', '2026-05-02 20:22:09', NULL, NULL, 'On Duty'),
+(33, 'Riverside Cafe Admin', '2026-05-01 10:00:00', '2026-05-01 11:00:00', '1 hrs 0 mins', 'Out'),
+(34, 'Riverside Cafe Admin', '2026-05-03 11:25:24', NULL, NULL, 'On Duty'),
+(35, 'Riverside Cafe Admin', '2026-05-03 11:42:30', '2026-05-03 11:45:39', '0 hrs 3 mins', 'Out'),
+(36, 'Riverside Cafe Admin', '2026-05-05 09:05:22', NULL, NULL, 'On Duty'),
+(37, 'Riverside Cafe Admin', '2026-05-05 12:43:32', NULL, NULL, 'On Duty'),
+(38, 'Riverside Cafe Admin', '2026-05-07 19:14:36', NULL, NULL, 'On Duty'),
+(39, 'Riverside Cafe Admin', '2026-05-07 20:31:27', NULL, NULL, 'On Duty'),
+(40, 'Riverside Cafe Admin', '2026-05-08 19:48:31', NULL, NULL, 'On Duty'),
+(41, 'Riverside Cafe Admin', '2026-05-08 20:07:51', '2026-05-08 20:22:27', '0 hrs 14 mins', 'Out'),
+(42, 'Sabrina Carpenter', '2026-05-08 20:22:32', NULL, NULL, 'On Duty'),
+(43, 'Riverside Cafe Admin', '2026-05-08 20:27:31', '2026-05-08 21:36:58', '1 hrs 9 mins', 'Out'),
+(44, 'Sabrina Carpenter', '2026-05-08 21:37:02', NULL, NULL, 'On Duty'),
+(45, 'Riverside Cafe Admin', '2026-05-10 12:29:33', NULL, NULL, 'On Duty'),
+(46, 'Riverside Cafe Admin', '2026-05-10 15:14:47', NULL, NULL, 'On Duty'),
+(47, 'Riverside Cafe Admin', '2026-05-10 15:30:37', NULL, NULL, 'On Duty'),
+(48, 'Riverside Cafe Admin', '2026-05-10 15:36:44', NULL, NULL, 'On Duty'),
+(49, 'Riverside Cafe Admin', '2026-05-10 15:55:12', NULL, NULL, 'On Duty'),
+(50, 'Riverside Cafe Admin', '2026-05-11 11:54:42', NULL, NULL, 'On Duty'),
+(51, 'Riverside Cafe Admin', '2026-05-11 14:33:36', NULL, NULL, 'On Duty'),
+(52, 'Riverside Cafe Admin', '2026-05-11 14:34:04', NULL, NULL, 'On Duty'),
+(53, 'Riverside Cafe Admin', '2026-05-11 14:34:08', NULL, NULL, 'On Duty'),
+(54, 'Riverside Cafe Admin', '2026-05-11 15:05:21', NULL, NULL, 'On Duty');
 
 -- --------------------------------------------------------
 
@@ -216,13 +241,15 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `phone`, `password`, `role`, `profile_pic`, `duty_day`, `created_at`, `updated_at`) VALUES
-(5, 'Riverside Cafe Admin', 'rs@gmail.com', '', '$2y$12$g3CM3sNi9ys9KdRC3t/T3O5sOFIBtKIkyoi6Vf2l6BIb/IX7WMdbi', 'admin', '1777172698_6a1b398e3f36f89efd44.jpg', 'Everyday', '2026-04-20 01:45:21', '2026-04-26 03:04:58'),
-(6, 'Ronelo Mabayag Dacillo', 'dacilloronelo@gmail.com', '09649935096', '$2y$12$86nVaeKSNfx5pMRDlBlcWeBtK7eMNob2oXHwe4AW1cxOwQe8Zo2/C', 'staff', '1777172397_4a268f38f83b82156459.jpg', 'Everyday', '2026-04-20 01:45:21', '2026-04-26 02:59:57'),
+(5, 'Riverside Cafe Admin', 'rs@gmail.com', '09876543210', '$2y$12$g3CM3sNi9ys9KdRC3t/T3O5sOFIBtKIkyoi6Vf2l6BIb/IX7WMdbi', 'admin', '1777172698_6a1b398e3f36f89efd44.jpg', 'Everyday', '2026-04-20 01:45:21', '2026-05-02 13:17:24'),
+(6, 'Ronelo Mabayag Dacillo', 'dacilloronelo@gmail.com', '09649935096', '$2y$12$86nVaeKSNfx5pMRDlBlcWeBtK7eMNob2oXHwe4AW1cxOwQe8Zo2/C', 'staff', '1777172397_4a268f38f83b82156459.jpg', 'Friday', '2026-04-20 01:45:21', '2026-05-02 12:31:30'),
 (7, 'Mailen Salla Bulahan', 'mailen@gmail.com', '09649935094', '$2y$12$2hbZ791Ja30XiOPExCGrReBtsEFxoAReIDPzLbY6byV6jD0/6k9DK', 'staff', '1777172338_72f667dea4c4f0e3719c.jpg', 'Tuesday', '2026-04-20 01:45:21', '2026-04-26 02:58:58'),
 (8, 'Ralph romeo Agus ', 'agus@gmail.com', '09649935093', '$2y$12$lb.TmmjAQlgS/XYxD7celui2RjsIIKmmsmqXzMz7oAKpF6j9o1Hsa', 'staff', '1777172380_e2fa0b492cdd1fd4acf8.jpg', 'Wednesday', '2026-04-20 01:46:46', '2026-04-26 02:59:40'),
-(9, 'Irish ann B. Adrias', 'irish@gmail.com', '', '$2y$12$Gme/cQnDynLUzJB8oC16o.uCaNVFnj9FyEs3MNDxL3St34TGAgskK', 'staff', '1777172682_34ad07078da01eca3d02.jpg', 'Sunday', '2026-04-20 01:47:15', '2026-04-26 03:04:43'),
+(9, 'Irish ann B. Adrias', 'irish@gmail.com', '09649935091', '$2y$12$Gme/cQnDynLUzJB8oC16o.uCaNVFnj9FyEs3MNDxL3St34TGAgskK', 'staff', '1777172682_34ad07078da01eca3d02.jpg', 'Sunday', '2026-04-20 01:47:15', '2026-04-27 01:46:33'),
 (10, 'Sabrina Carpenter', 'Sabrina@gmail.com', '09649935092', '$2y$12$7oqbWFk4itZKG7wh80jai.EFOfOetJcoidagK934DoYHUZG1ogexe', 'staff', '1777172437_ab83a44777c33c72cba4.jpg', 'Monday', '2026-04-20 01:47:39', '2026-04-26 03:00:37'),
-(11, 'Glenn Magada Azuelo', 'glenn@gmail.com', NULL, '$2y$12$Rw497k3B57HQWfMauw65LeJZsO7ipAr7jVDZMe6vKA/4.AZhrDhX6', 'admin', 'default_avatar.jpg', NULL, '2026-04-22 05:15:05', '2026-04-22 05:15:05');
+(11, 'Glenn Magada Azuelo', 'glennazuelo@gmail.com', '', '$2y$12$Rw497k3B57HQWfMauw65LeJZsO7ipAr7jVDZMe6vKA/4.AZhrDhX6', 'admin', 'default_avatar.jpg', 'Everyday', '2026-04-22 05:15:05', '2026-05-02 13:08:22'),
+(12, 'John Doe', 'john@gmail.com', '09166912661', 'pass123', 'staff', '1778243935_19fd1f9f3354067565e6.jpg', 'Monday', '2026-05-02 12:20:18', '2026-05-08 12:38:55'),
+(13, 'Jane Smith', 'jane@gmail.com', '09649935099', 'pass456', 'staff', '1778244000_83a937572968fecdf1c2.jpg', 'Wednesday', '2026-05-02 12:26:16', '2026-05-08 12:40:00');
 
 --
 -- Indexes for dumped tables
@@ -271,31 +298,31 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=66;
 
 --
 -- AUTO_INCREMENT for table `staff_logs`
 --
 ALTER TABLE `staff_logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- Constraints for dumped tables

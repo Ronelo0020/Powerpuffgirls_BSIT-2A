@@ -120,16 +120,38 @@
 <body>
 
 <div class="sidebar">
-    <div class="mb-5 text-center">
-        <h4 class="fw-bold"><span style="color:var(--accent-gold)">Riverside</span> Café</h4>
+    <div class="mb-5 px-3 text-center">
+        <h4 class="fw-bold mb-0">
+            <span style="color: var(--accent-gold);">Riverside</span> <span style="color: white;">Café</span>
+        </h4>
+        
+        <?php if (session()->get('role') === 'admin'): ?>
+            <small class="text-white d-block" style="opacity: 0.6; font-size: 0.75rem; letter-spacing: 1px;">ADMIN TERMINAL</small>
+        <?php else: ?>
+            <small class="text-white d-block" style="opacity: 0.6; font-size: 0.75rem; letter-spacing: 1px;">STAFF TERMINAL</small>
+        <?php endif; ?>
     </div>
+
     <nav class="d-flex flex-column h-100">
-        <a href="<?= base_url('dashboard') ?>" class="nav-link"><i class="fas fa-chart-pie me-3"></i> Overview</a>
-        <a href="<?= base_url('products') ?>" class="nav-link"><i class="fas fa-coffee me-3"></i> Menu & Inventory</a>
-        <a href="<?= base_url('pos') ?>" class="nav-link"><i class="fas fa-cash-register me-3"></i> Barista POS</a>
-        <a href="<?= base_url('sales') ?>" class="nav-link"><i class="fas fa-file-invoice-dollar me-3"></i> Sales Reports</a>
-        <hr class="text-secondary opacity-25 mx-3">
-        <a href="<?= base_url('auth/manage') ?>" class="nav-link active"><i class="fas fa-users-cog me-3"></i> Manage Users</a>
+        <a href="<?= base_url('dashboard') ?>" class="nav-link <?= (uri_string() == 'dashboard') ? 'active' : '' ?>">
+            <i class="fas fa-th-large me-3"></i> Dashboard
+        </a>
+        <a href="<?= base_url('products') ?>" class="nav-link <?= (uri_string() == 'products') ? 'active' : '' ?>">
+            <i class="fas fa-box me-3"></i> Menu & Inventory
+        </a>
+        <a href="<?= base_url('pos') ?>" class="nav-link <?= (uri_string() == 'pos') ? 'active' : '' ?>">
+            <i class="fas fa-cash-register me-3"></i> Barista POS
+        </a>
+
+        <?php if(session()->get('role') == 'admin'): ?>
+            <hr class="text-secondary opacity-25 mx-3">
+            <a href="<?= base_url('sales') ?>" class="nav-link <?= (uri_string() == 'sales') ? 'active' : '' ?>">
+                <i class="fas fa-chart-line me-3"></i> Sales Analytics
+            </a>
+            <a href="<?= base_url('auth/manage') ?>" class="nav-link <?= (uri_string() == 'auth/manage') ? 'active' : '' ?>">
+                <i class="fas fa-users me-3"></i> Manage Staff
+            </a>
+        <?php endif; ?>
     </nav>
 </div>
 

@@ -10,7 +10,6 @@
     
     <style>
         :root { 
-            /* Dashboard Dark Theme Colors */
             --riverside-yellow: #ffcc4d; 
             --sidebar-bg: #000000; 
             --body-bg: #0b0b0b; 
@@ -29,7 +28,6 @@
             color: var(--text-main);
         }
 
-        /* Sidebar Styling */
         .sidebar { 
             width: 260px; 
             background: var(--sidebar-bg); 
@@ -39,6 +37,7 @@
             position: fixed; 
             height: 100vh; 
             border-right: 1px solid var(--border-color);
+            z-index: 1000;
         }
 
         .main-content { 
@@ -60,13 +59,17 @@
             font-weight: 500;
         }
         
-        /* Dashboard Yellow Active State */
-        .nav-link:hover, .nav-link.active { 
-            background: var(--riverside-yellow); 
-            color: #000; 
+        /* Updated: Hiwalay na ang hover sa active para hindi mag-conflict */
+        .nav-link:hover { 
+            background: rgba(255, 255, 255, 0.1); 
+            color: var(--riverside-yellow); 
         }
 
-        /* Inventory Cards */
+        .nav-link.active { 
+            background: var(--riverside-yellow) !important; 
+            color: #000 !important; 
+        }
+
         .category-card {
             border: 1px solid var(--border-color);
             border-radius: 12px;
@@ -97,15 +100,12 @@
         
         .item-name { font-weight: 500; color: var(--text-main); margin-bottom: 2px; }
         .sku-label { font-size: 0.8rem; color: var(--text-muted); }
-
         .price-tag { color: var(--riverside-yellow); font-weight: 700; font-size: 0.95rem; }
         
-        /* Status Badges */
         .stock-indicator { font-size: 0.75rem; font-weight: 600; padding: 6px 12px; border-radius: 20px; }
         .bg-success-subtle { background: rgba(40, 167, 69, 0.1) !important; color: #28a745 !important; border: 1px solid rgba(40, 167, 69, 0.2); }
         .bg-danger-subtle { background: rgba(220, 53, 69, 0.1) !important; color: #dc3545 !important; border: 1px solid rgba(220, 53, 69, 0.2); }
 
-        /* Action Buttons */
         .btn-action-circle {
             width: 35px; height: 35px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;
             transition: 0.3s; border: 1px solid var(--border-color); background: #222; color: var(--text-muted); text-decoration: none;
@@ -122,45 +122,47 @@
             transition: 0.3s;
         }
         .btn-add:hover { background: #e6b845; color: #000; }
-
         .text-muted { color: var(--text-muted) !important; }
     </style>
 </head>
 <body>
 
 <div class="sidebar">
-    <div class="mb-5 px-3">
-        <h4 class="fw-bold"><span style="color:var(--riverside-yellow)">Riverside</span> Café</h4>
-        <small class="text-muted">Admin Terminal</small>
+    <div class="mb-5 px-3 text-center">
+        <h4 class="fw-bold mb-0">
+            <span style="color: var(--riverside-yellow);">Riverside</span> <span style="color: white;">Café</span>
+        </h4>
+        
+        <small class="text-white d-block" style="opacity: 0.6; font-size: 0.75rem; letter-spacing: 1px;">
+            <?= (session()->get('role') === 'admin') ? 'ADMIN' : 'STAFF' ?>
+        </small>
     </div>
 
     <nav class="d-flex flex-column h-100">
         <a href="<?= base_url('dashboard') ?>" class="nav-link <?= (uri_string() == 'dashboard') ? 'active' : '' ?>">
             <i class="fas fa-th-large me-3"></i> Dashboard
         </a>
-        <a href="<?= base_url('products') ?>" class="nav-link <?= (uri_string() == 'products') ? 'active' : '' ?>">
+
+        <a href="<?= base_url('products') ?>" class="nav-link <?= (strpos(uri_string(), 'products') !== false) ? 'active' : '' ?>">
             <i class="fas fa-box me-3"></i> Menu & Inventory
         </a>
+
         <a href="<?= base_url('pos') ?>" class="nav-link <?= (uri_string() == 'pos') ? 'active' : '' ?>">
             <i class="fas fa-cash-register me-3"></i> Barista POS
         </a>
 
         <?php if(session()->get('role') == 'admin'): ?>
             <hr class="text-secondary opacity-25 mx-3">
+            
             <a href="<?= base_url('sales') ?>" class="nav-link <?= (uri_string() == 'sales') ? 'active' : '' ?>">
                 <i class="fas fa-chart-line me-3"></i> Sales Analytics
             </a>
-            <a href="<?= base_url('auth/manage') ?>" class="nav-link <?= (uri_string() == 'auth/manage') ? 'active' : '' ?>">
+
+            <a href="<?= base_url('auth/manage') ?>" class="nav-link <?= (strpos(uri_string(), 'auth') !== false) ? 'active' : '' ?>">
                 <i class="fas fa-users me-3"></i> Manage Staff
             </a>
         <?php endif; ?>
     </nav>
-
-    <div class="mt-auto border-top border-secondary pt-3">
-        <a href="<?= base_url('logout') ?>" class="nav-link text-danger">
-            <i class="fas fa-sign-out-alt me-3"></i> Logout 
-        </a>
-    </div>
 </div>
 
 <div class="main-content">
@@ -175,62 +177,94 @@
     </div>
 
     <div id="menuAccordion">
-        <?php 
-        $grouped = [];
-        if(!empty($products)) {
-            foreach($products as $p) { $grouped[$p['category']][] = $p; }
+   <?php 
+$grouped = [];
+if(!empty($products)) {
+    foreach($products as $p) { 
+        $grouped[$p['category']]['items'][] = $p;
+        
+        // Initialize counter para sa low stock bawat category
+        if (!isset($grouped[$p['category']]['low_stock_count'])) {
+            $grouped[$p['category']]['low_stock_count'] = 0;
         }
+        
+        // Dagdagan ang count kung 5 pababa ang stock
+        if ($p['stock'] <= 5) {
+            $grouped[$p['category']]['low_stock_count']++;
+        }
+    }
+}
 
-        $i = 0;
-        foreach($grouped as $category => $items): 
-            $i++; $collapseId = "collapse_" . $i;
-        ?>
-        <div class="category-card">
-            <div class="category-header collapsed" data-bs-toggle="collapse" data-bs-target="#<?= $collapseId ?>">
-                <div class="d-flex align-items-center">
-                    <i class="fas fa-folder text-muted me-3"></i>
-                    <h5 class="category-title"><?= strtoupper($category) ?></h5>
-                    <span class="badge bg-dark text-muted border border-secondary ms-3" style="font-size: 0.7rem;"><?= count($items) ?> items</span>
-                </div>
-                <i class="fas fa-chevron-down text-muted"></i>
-            </div>
+$i = 0;
+foreach($grouped as $category => $data): 
+    $items = $data['items'];
+    $lowStockAlert = $data['low_stock_count']; // Ito ang gagamitin nating trigger
+    $i++; 
+    $collapseId = "collapse_" . $i;
+?>
+       <div class="category-card">
+    <div class="category-header collapsed <?= ($lowStockAlert > 0) ? 'border-start border-4 border-danger' : '' ?>" 
+         data-bs-toggle="collapse" 
+         data-bs-target="#<?= $collapseId ?>">
+        
+        <div class="d-flex align-items-center">
+            <?php if($lowStockAlert > 0): ?>
+                <i class="fas fa-exclamation-circle text-danger me-3 animate-pulse"></i>
+            <?php else: ?>
+                <i class="fas fa-folder text-muted me-3"></i>
+            <?php endif; ?>
 
-            <div id="<?= $collapseId ?>" class="collapse" data-bs-parent="#menuAccordion">
-                <div class="card-body p-0">
-                    <?php foreach($items as $item): ?>
-                    <div class="item-row">
-                        <div style="flex: 2;">
-                            <div class="item-name"><?= $item['product_name'] ?></div>
-                            <small class="sku-label">ID: #<?= $item['id'] ?></small>
-                        </div>
-                        
-                        <div style="flex: 1;" class="text-center">
-                            <span class="price-tag">₱<?= number_format($item['price'], 2) ?></span>
-                        </div>
+            <h5 class="category-title"><?= strtoupper($category) ?></h5>
 
-                        <div style="flex: 1;" class="text-center">
-                            <?php if($item['stock'] <= 0): ?>
-                                <span class="stock-indicator bg-danger-subtle">OUT OF STOCK</span>
-                            <?php elseif($item['stock'] <= 5): ?>
-                                <span class="stock-indicator bg-danger text-white">
-                                    <i class="fas fa-exclamation-triangle me-1"></i> <?= $item['stock'] ?> LOW STOCK
-                                </span>
-                            <?php else: ?>
-                                <span class="stock-indicator bg-success-subtle">
-                                    <?= $item['stock'] ?> UNITS
-                                </span>
-                            <?php endif; ?>
-                        </div>
+            <span class="badge bg-dark text-muted border border-secondary ms-3" style="font-size: 0.7rem;">
+                <?= count($items) ?> items
+            </span>
 
-                        <div style="flex: 1;" class="text-end">
-                            <a href="<?= base_url('products/edit/'.$item['id']) ?>" class="btn-action-circle me-1"><i class="fas fa-pen fa-sm"></i></a>
-                            <a href="<?= base_url('products/delete/'.$item['id']) ?>" class="btn-action-circle text-danger" onclick="return confirm('Are you sure?')"><i class="fas fa-trash-alt fa-sm"></i></a>
-                        </div>
-                    </div>
-                    <?php endforeach; ?>
-                </div>
-            </div>
+            <?php if($lowStockAlert > 0): ?>
+                <span class="badge bg-danger ms-2" style="font-size: 0.65rem; letter-spacing: 0.5px;">
+                    <i class="fas fa-arrow-down me-1"></i> <?= $lowStockAlert ?> NEEDS RESTOCK
+                </span>
+            <?php endif; ?>
         </div>
+        <i class="fas fa-chevron-down text-muted"></i>
+    </div>
+
+    <div id="<?= $collapseId ?>" class="collapse" data-bs-parent="#menuAccordion">
+        <div class="card-body p-0">
+            <?php foreach($items as $item): ?>
+            <div class="item-row">
+                <div style="flex: 2;">
+                    <div class="item-name"><?= $item['product_name'] ?></div>
+                    <small class="sku-label">ID: #<?= $item['id'] ?></small>
+                </div>
+                
+                <div style="flex: 1;" class="text-center">
+                    <span class="price-tag">₱<?= number_format($item['price'], 2) ?></span>
+                </div>
+
+                <div style="flex: 1;" class="text-center">
+                    <?php if($item['stock'] <= 0): ?>
+                        <span class="stock-indicator bg-danger-subtle">OUT OF STOCK</span>
+                    <?php elseif($item['stock'] <= 5): ?>
+                        <span class="stock-indicator bg-danger text-white">
+                            <i class="fas fa-exclamation-triangle me-1"></i> <?= $item['stock'] ?> LOW
+                        </span>
+                    <?php else: ?>
+                        <span class="stock-indicator bg-success-subtle">
+                            <?= $item['stock'] ?> UNITS
+                        </span>
+                    <?php endif; ?>
+                </div>
+
+                <div style="flex: 1;" class="text-end">
+                    <a href="<?= base_url('products/edit/'.$item['id']) ?>" class="btn-action-circle me-1"><i class="fas fa-pen fa-sm"></i></a>
+                    <a href="<?= base_url('products/delete/'.$item['id']) ?>" class="btn-action-circle text-danger" onclick="return confirm('Are you sure?')"><i class="fas fa-trash-alt fa-sm"></i></a>
+                </div>
+            </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+</div>
         <?php endforeach; ?>
     </div>
 </div>

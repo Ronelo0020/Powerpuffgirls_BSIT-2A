@@ -108,18 +108,34 @@
 <div class="sidebar">
     <div class="mb-5 text-center">
         <h4 class="fw-bold m-0"><span style="color:var(--riverside-gold)">Riverside</span> Café</h4>
-        <small style="color: var(--text-muted); font-size: 0.65rem; letter-spacing: 2px;">ADMIN TERMINAL</small>
+        <small style="color: var(--text-muted); font-size: 0.65rem; letter-spacing: 2px;">
+            <?= (session()->get('role') == 'admin') ? 'ADMIN' : 'STAFF'; ?>
+        </small>
     </div>
     <nav class="d-flex flex-column h-100">
-        <a href="<?= base_url('dashboard') ?>" class="nav-link active"><i class="fas fa-th-large me-3"></i> Dashboard</a>
-        <a href="<?= base_url('products') ?>" class="nav-link"><i class="fas fa-coffee me-3"></i> Menu & Inventory</a>
-        <a href="<?= base_url('pos') ?>" class="nav-link"><i class="fas fa-cash-register me-3"></i> Barista POS</a>
-        <a href="<?= base_url('sales') ?>" class="nav-link"><i class="fas fa-chart-line me-3"></i> Sales Analytics</a>
-        <a href="<?= base_url('auth/manage') ?>" class="nav-link <?= (uri_string() == 'auth/manage') ? 'active' : '' ?>">
-            <i class="fas fa-users me-3"></i> Manage Staff
+        <a href="<?= base_url('dashboard') ?>" class="nav-link <?= (uri_string() == 'dashboard') ? 'active' : '' ?>">
+            <i class="fas fa-th-large me-3"></i> Dashboard
         </a>
+        <a href="<?= base_url('products') ?>" class="nav-link <?= (uri_string() == 'products') ? 'active' : '' ?>">
+            <i class="fas fa-coffee me-3"></i> Menu & Inventory
+        </a>
+        <a href="<?= base_url('pos') ?>" class="nav-link <?= (uri_string() == 'pos') ? 'active' : '' ?>">
+            <i class="fas fa-cash-register me-3"></i> Barista POS
+        </a>
+        <?php if(session()->get('role') == 'admin'): ?>
+            <hr class="text-secondary opacity-25 mx-3">
+            <a href="<?= base_url('sales') ?>" class="nav-link <?= (uri_string() == 'sales') ? 'active' : '' ?>">
+                <i class="fas fa-chart-line me-3"></i> Sales Analytics
+            </a>
+            <a href="<?= base_url('auth/manage') ?>" class="nav-link <?= (uri_string() == 'auth/manage') ? 'active' : '' ?>">
+                <i class="fas fa-users me-3"></i> Manage Staff
+            </a>
+        <?php endif; ?>
+
         <div class="mt-auto">
-            <a href="<?= base_url('logout') ?>" class="nav-link text-danger"><i class="fas fa-sign-out-alt me-3"></i> Logout</a>
+            <a href="<?= base_url('logout') ?>" class="nav-link text-danger">
+                <i class="fas fa-sign-out-alt me-3"></i> Logout
+            </a>
         </div>
     </nav>
 </div>

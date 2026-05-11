@@ -64,23 +64,38 @@
 <body>
 
 <div class="sidebar">
-    <div class="mb-5 text-center">
-        <h4 class="fw-bold"><span style="color:var(--accent-gold)">Riverside</span> Café</h4>
-        <small class="text-white text-uppercase" style="font-size: 0.7rem; letter-spacing: 1px; opacity: 0.7;">Barista Terminal</small>
+    <div class="mb-5 px-3 text-center">
+        <h4 class="fw-bold mb-0">
+            <span style="color: var(--accent-gold);">Riverside</span> <span style="color: white;">Café</span>
+        </h4>
+        
+        <?php if (session()->get('role') === 'admin'): ?>
+            <small class="text-white d-block" style="opacity: 0.6; font-size: 0.75rem; letter-spacing: 1px;">ADMIN TERMINAL</small>
+        <?php else: ?>
+            <small class="text-white d-block" style="opacity: 0.6; font-size: 0.75rem; letter-spacing: 1px;">STAFF TERMINAL</small>
+        <?php endif; ?>
     </div>
+
     <nav class="d-flex flex-column h-100">
-        <a href="<?= base_url('dashboard') ?>" class="nav-link"><i class="fas fa-chart-pie me-3"></i> Overview</a>
-        <a href="<?= base_url('products') ?>" class="nav-link"><i class="fas fa-coffee me-3"></i> Menu & Inventory</a>
-        <a href="<?= base_url('pos') ?>" class="nav-link active"><i class="fas fa-cash-register me-3"></i> Barista POS</a>
+        <a href="<?= base_url('dashboard') ?>" class="nav-link <?= (uri_string() == 'dashboard') ? 'active' : '' ?>">
+            <i class="fas fa-th-large me-3"></i> Overview
+        </a>
+        <a href="<?= base_url('products') ?>" class="nav-link <?= (uri_string() == 'products') ? 'active' : '' ?>">
+            <i class="fas fa-box me-3"></i> Menu & Inventory
+        </a>
+        <a href="<?= base_url('pos') ?>" class="nav-link <?= (uri_string() == 'pos') ? 'active' : '' ?>">
+            <i class="fas fa-cash-register me-3"></i> Barista POS
+        </a>
+
         <?php if(session()->get('role') == 'admin'): ?>
-            <a href="<?= base_url('sales') ?>" class="nav-link"><i class="fas fa-file-invoice-dollar me-3"></i> Sales Reports</a>
+            <hr class="text-secondary opacity-25 mx-3">
+            <a href="<?= base_url('sales') ?>" class="nav-link <?= (uri_string() == 'sales') ? 'active' : '' ?>">
+                <i class="fas fa-chart-line me-3"></i> Sales Reports
+            </a>
             <a href="<?= base_url('auth/manage') ?>" class="nav-link <?= (uri_string() == 'auth/manage') ? 'active' : '' ?>">
                 <i class="fas fa-users me-3"></i> Manage Staff
             </a>
         <?php endif; ?>
-        <div class="mt-auto">
-            <a href="<?= base_url('logout') ?>" class="nav-link text-danger"><i class="fas fa-sign-out-alt me-3"></i> Logout</a>
-        </div>
     </nav>
 </div>
 
@@ -175,7 +190,7 @@
     <div class="modal-dialog modal-dialog-centered modal-sm">
         <div class="modal-content bg-dark text-center p-4 border-secondary" style="border-radius: 20px;">
             <h6 class="fw-bold mb-3 text-white">Scan GCash QR</h6>
-            <img src="<?= base_url('assets/img/gcash_qr.jpg') ?>" class="img-fluid rounded mb-3 border border-secondary" onerror="this.src='https://placehold.co/300x400?text=GCash+QR+Code'">
+            <img src="<?= base_url('assets/img/payments/gcash_qr.jpg') ?>" class="img-fluid rounded mb-3 border border-secondary" onerror="this.src='https://placehold.co/300x400?text=GCash+QR+Code'">
             <button type="button" class="btn btn-warning w-100 rounded-pill" data-bs-dismiss="modal">Proceed to Details</button>
         </div>
     </div>
@@ -203,12 +218,16 @@
                     <p class="mb-0" style="font-size: 9px;">THANK YOU! COME AGAIN</p>
                 </div>
             </div>
-            <div class="modal-footer border-0 p-3 bg-light">
-                <div class="row w-100 g-2">
-                    <div class="col-6"><button class="btn btn-outline-dark btn-sm w-100 py-2" onclick="window.location.reload()">NEW</button></div>
-                    <div class="col-6"><button class="btn btn-warning btn-sm w-100 py-2" onclick="window.print()">PRINT</button></div>
-                </div>
-            </div>
+           <div class="modal-footer border-0 p-3 bg-light">
+   <div class="row w-100 g-2 mt-2">
+    <div class="col-12">
+        <button type="button" class="btn btn-outline-dark btn-sm w-100 py-2" onclick="resetPOS()">NEW ORDER</button>
+    </div>
+    <div class="col-12">
+        <button type="button" class="btn btn-warning btn-sm w-100 py-2" onclick="printReceipt()">PRINT RECEIPT</button>
+    </div>
+</div>
+</div>
         </div>
     </div>
 </div>
@@ -272,62 +291,231 @@
             }
         });
     });
+async function checkout() {
+    if (cart.length === 0) return alert("Select products first.");
+    
+    const method = document.querySelector('input[name="payment_method"]:checked').value;
+    const total = cart.reduce((s, i) => s + (i.price * i.qty), 0);
+    
+    let formData = new FormData();
+    formData.append('items', JSON.stringify(cart));
+    formData.append('total_amount', total);
+    formData.append('payment_method', method);
 
-    async function checkout() {
-        if (cart.length === 0) return alert("Select products first.");
-        const method = document.querySelector('input[name="payment_method"]:checked').value;
-        const total = cart.reduce((s, i) => s + (i.price * i.qty), 0);
+    let payValue = 0;
+
+    if (method === 'Cash') {
+        const tendered = parseFloat(document.getElementById('cash-amount').value) || 0;
+        if (tendered < total) return alert("Insufficient cash!");
         
-        let formData = new FormData();
-        formData.append('items', JSON.stringify(cart));
-        formData.append('total_amount', total);
-        formData.append('payment_method', method);
-
-        if (method === 'Cash') {
-            const tendered = parseFloat(document.getElementById('cash-amount').value) || 0;
-            if (tendered < total) return alert("Insufficient cash!");
-            formData.append('payment', tendered);
-        } else {
-            formData.append('payment', total);
-            formData.append('gcash_reference', document.getElementById('gcash-reference').value);
-            const fileInput = document.getElementById('gcash-ss');
-            if (fileInput.files.length > 0) {
-                formData.append('payment_screenshot', fileInput.files[0]);
-            }
-        }
-
-        try {
-            const res = await fetch('<?= base_url("pos/save_order") ?>', { 
-                method: 'POST', 
-                body: formData,
-                headers: { 'X-Requested-With': 'XMLHttpRequest' }
-            });
-            const data = await res.json();
-            
-            if (data.status === 'success') {
-                document.getElementById('receiptDateText').innerText = new Date().toLocaleString();
-                document.getElementById('receiptOrderIDText').innerText = data.order_id;
-                document.getElementById('receiptTotalText').innerText = "₱" + total.toFixed(2);
-                document.getElementById('receiptSubtotalText').innerText = "₱" + total.toFixed(2);
-                
-                let payValue = (method === 'Cash') ? parseFloat(document.getElementById('cash-amount').value) : total;
-                document.getElementById('receiptPaymentText').innerText = "₱" + payValue.toFixed(2);
-                document.getElementById('receiptChangeText').innerText = "₱" + (payValue - total).toFixed(2);
-
-                let itemsHtml = '';
-                cart.forEach(item => {
-                    itemsHtml += `<div class="receipt-item-row"><span>${item.qty} x ${item.name}</span><span>₱${(item.price * item.qty).toFixed(2)}</span></div>`;
-                });
-                document.getElementById('receiptItemsList').innerHTML = itemsHtml;
-                
-                new bootstrap.Modal(document.getElementById('receiptModal')).show();
-            } else { 
-                alert(data.message); 
-            }
-        } catch (e) { 
-            alert("Order saved! (Receipt simulated)"); 
+        payValue = tendered;
+        formData.append('payment', tendered);
+        formData.append('change_amount', tendered - total);
+    } else {
+        // GCash Logic
+        const refNo = document.getElementById('gcash-reference').value;
+        const fileInput = document.getElementById('gcash-ss');
+        
+        if (!refNo) return alert("Please enter GCash Reference Number.");
+        
+        payValue = total; // Sa GCash, saktong total ang bayad
+        formData.append('payment', total);
+        formData.append('change_amount', 0);
+        formData.append('gcash_reference', refNo);
+    
+        if (fileInput.files.length > 0) {
+            formData.append('payment_screenshot', fileInput.files[0]);
         }
     }
+
+    try {
+        const res = await fetch('<?= base_url("pos/save_order") ?>', { 
+            method: 'POST', 
+            body: formData,
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        });
+        const data = await res.json();
+        
+        if (data.status === 'success') {
+            // I-populate ang Receipt Modal
+            document.getElementById('receiptDateText').innerText = new Date().toLocaleString();
+            document.getElementById('receiptOrderIDText').innerText = data.order_id;
+            document.getElementById('receiptTotalText').innerText = "₱" + total.toFixed(2);
+            document.getElementById('receiptSubtotalText').innerText = "₱" + total.toFixed(2);
+            document.getElementById('receiptPaymentText').innerText = "₱" + payValue.toFixed(2);
+            document.getElementById('receiptChangeText').innerText = "₱" + (payValue - total).toFixed(2);
+
+            let itemsHtml = '';
+            cart.forEach(item => {
+                itemsHtml += `<div class="receipt-item-row"><span>${item.qty} x ${item.name}</span><span>₱${(item.price * item.qty).toFixed(2)}</span></div>`;
+            });
+            document.getElementById('receiptItemsList').innerHTML = itemsHtml;
+            
+            // Ipakita ang Receipt
+            new bootstrap.Modal(document.getElementById('receiptModal')).show();
+        } else { 
+            alert(data.message); 
+        }
+    } catch (e) { 
+        console.error(e);
+        alert("Error saving order. Check console."); 
+    }
+}
+function resetPOS() {
+    console.log("New Order trigger!");
+    
+    try {
+        // 1. Linisin ang cart
+        cart = [];
+        
+        // 2. I-update ang UI Sidebar
+        if (typeof updateCartUI === "function") {
+            updateCartUI();
+        }
+
+        // 3. Isara ang Modal
+        const modalEl = document.getElementById('receiptModal');
+        if (modalEl) {
+            const modalInstance = bootstrap.Modal.getInstance(modalEl);
+            if (modalInstance) {
+                modalInstance.hide();
+            }
+        }
+
+        // 4. Force Reload para sa panibagong Order ID at malinis na inputs
+        // Ito ang pinakasiguradong paraan para mag-reset ang POS
+        setTimeout(() => {
+            window.location.reload();
+        }, 100);
+
+    } catch (err) {
+        console.error("Reset Error:", err);
+        window.location.reload();
+    }
+}
+  function printReceipt() {
+    const receiptData = {
+        date: document.getElementById('receiptDateText').innerText,
+        orderId: document.getElementById('receiptOrderIDText').innerText,
+        items: document.getElementById('receiptItemsList').innerHTML,
+        total: document.getElementById('receiptTotalText').innerText,
+        tendered: document.getElementById('receiptPaymentText').innerText,
+        change: document.getElementById('receiptChangeText').innerText
+    };
+
+    const virtualPrinter = window.open('', '_blank', 'height=800,width=500');
+
+    virtualPrinter.document.write(`
+        <html>
+            <head>
+                <title>Riverside Café - Official Receipt</title>
+                <style>
+                    body { 
+                        background-color: #333; 
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        padding: 40px 20px;
+                        font-family: 'Courier New', Courier, monospace;
+                        margin: 0;
+                    }
+                    .paper {
+                        background: white;
+                        width: 380px;
+                        padding: 40px 30px;
+                        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+                        color: black;
+                        position: relative;
+                    }
+                    /* Improvement: Logo Placeholder */
+                    .logo-container { text-align: center; margin-bottom: 10px; }
+                    .logo-placeholder { 
+                        font-size: 40px; 
+                        font-weight: bold; 
+                        border: 3px solid black; 
+                        display: inline-block; 
+                        padding: 5px 15px;
+                        margin-bottom: 10px;
+                    }
+                    
+                    .text-center { text-align: center; }
+                    .dashed { border-top: 2px dashed #000; margin: 15px 0; }
+                    .row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 16px; }
+                    .total-row { font-size: 24px; font-weight: bold; margin-top: 10px; border-top: 1px solid black; padding-top: 10px; }
+                    
+                    .header h2 { margin: 0; font-size: 26px; text-transform: uppercase; letter-spacing: 2px; }
+                    .header p { margin: 3px 0; font-size: 13px; color: #333; }
+                    
+                    .items-table { width: 100%; margin: 20px 0; }
+                    
+                    .no-print { 
+                        margin-bottom: 20px;
+                        padding: 12px 25px; 
+                        background: #ffc107; 
+                        border: none; 
+                        cursor: pointer; 
+                        font-weight: bold; 
+                        border-radius: 50px;
+                        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+                        font-family: sans-serif;
+                    }
+                    .no-print:hover { background: #e0a800; }
+
+                    @media print {
+                        .no-print { display: none; }
+                        body { background: white; padding: 0; }
+                        .paper { box-shadow: none; width: 100%; padding: 10px; }
+                    }
+                </style>
+            </head>
+            <body>
+                <button class="no-print" onclick="window.print()">🖨️ PRINT ACTUAL RECEIPT</button>
+                
+                <div class="paper">
+                    <div class="logo-container">
+                        <div class="logo-placeholder">RC</div>
+                    </div>
+                    
+                    <div class="text-center header">
+                        <h2>RIVERSIDE CAFÉ</h2>
+                        <p>Burgos Street, Brgy. 8, Kabankalan City</p>
+                        <p>Negros Occidental, Philippines</p>
+                        <p style="margin-top:10px; font-weight:bold;">${receiptData.date}</p>
+                    </div>
+
+                    <div class="dashed"></div>
+                    
+                    <div class="items">
+                        ${receiptData.items}
+                    </div>
+
+                    <div class="dashed"></div>
+
+                    <div class="row"><span>Subtotal</span><span>${receiptData.total}</span></div>
+                    <div class="row total-row">
+                        <span>TOTAL</span>
+                        <span>${receiptData.total}</span>
+                    </div>
+
+                    <div class="dashed"></div>
+
+                    <div class="row"><span>Cash Tendered:</span><span>${receiptData.tendered}</span></div>
+                    <div class="row"><span>Change Due:</span><span>${receiptData.change}</span></div>
+
+                    <div class="dashed"></div>
+
+                    <div class="text-center" style="margin-top: 30px;">
+                        <p style="font-size: 18px; font-weight: bold; margin-bottom: 5px;">ORDER ID: #${receiptData.orderId}</p>
+                        <p style="font-size: 12px;">Visit us: facebook.com/RiversidecafeKabankalan</p>
+                        <p style="font-size: 14px; margin-top: 15px; font-style: italic;">THANK YOU! COME AGAIN</p>
+                    </div>
+                </div>
+            </body>
+        </html>
+    `);
+
+    virtualPrinter.document.close();
+}
 </script>
 </body>
 </html>

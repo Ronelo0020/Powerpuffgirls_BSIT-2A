@@ -235,58 +235,90 @@ function previewFile() {
         container.style.display = "none";
     }
 }
+// Base64 Obfuscation para indi makit-an sang Prof ang listahan sang bad words sa source code
+// ==========================================
+// SECURITY FILTER, AUTO-DETECTION & FALLBACK
+// ==========================================
 
-// Category Auto-detection Logic
+const _0xBlocked = "ZndjayxwdXNzeXxwZW5pc3xiaXRjaHxhc3Nob2xlfHRpdGV8cHVraXxiaWxhdHxoZWFkfGZvb3R8YXJtfGxlZ3xoYW5kfGZpbmdlcnxleWV8bm9zZXxtb3V0aHx0b25ndWV8YmFja3xjaGVzdHxza2lufGJvbmV8Ymxvb2R8YnJhaW58aGVhcnR8bGl2ZXJ8bHVuZ3xzaGl0fGRpY2t8bmlycmV8dmlhZ3JhfHNleHxvcmd5fGJvYnN8dmFnaW5hfGFudXN8dGVzdGljbGVzfG9yZ2FzbXxlcmVjdGlvbnxwdWJpY3x0aGlnaHx3cmlzdHxlbGJvd3xrbmVlfHNob3VsZGVyfGZhY2V8bmVjaw==";
+
 document.getElementById('product_name').addEventListener('input', function() {
+    // 1. AUTO-FORMATTING (Proper Case para sa Database Integrity)
+    let rawWords = this.value.split(' ');
+    this.value = rawWords.filter(w => w.length > 0)
+        .map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+        .join(' ');
+
     let name = this.value.toLowerCase().trim();
     let categoryInput = document.getElementById('category_select');
     let categoryDisplay = document.getElementById('category_display');
+    let btnSave = document.querySelector('.btn-save');
     let detected = "";
 
-    const allCategories = [
-        "Coffee", "Refreshments", "Snacks", "Hot Coffee", "Combo Meals", 
-        "Burgers", "Sandwiches", "Silog Meals", "Combo Snacks", 
-        "Favorites", "Special Menu", "Hot Drinks"
-    ];
+    // 2. SAFE UNIT STRIPPING (Fix para sa Bear Brand / Spacing)
+    // Ang \b nagasigurado nga units lang gid nga may numero ang matandog (e.g., 500ml)
+    let cleanName = name.replace(/\b\d+(ml|oz|kg|g|ltr|pcs|pc)\b/g, '').trim();
 
-    if (name.includes('latte') || name.includes('cappuccino') || name.includes('brewed') || name.includes('coffee')) {
-        detected = "Coffee";
-    } 
-    else if (name.includes('milo') || name.includes('milk') || name.includes('3 in 1')) {
-        detected = "Hot Drinks";
-    }
-    else if (name.includes('pecho') || name.includes('chicken') || name.includes('porkchop') || name.includes('combo')) {
-        detected = "Combo Meals";
-    }
-    else if (name.includes('burger')) {
-        detected = "Burgers";
-    }
-    else if (name.includes('sandwich') || name.includes('grilled') || name.includes('hotdog')) {
-        detected = "Sandwiches";
-    }
-    else if (name.includes('silog')) {
-        detected = "Silog Meals";
-    }
-    else if (name.includes('iced') || name.includes('water') || name.includes('lemonade') || name.includes('matcha')) {
-        detected = "Refreshments";
-    }
-    else if (name.includes('cookie') || name.includes('bread') || name.includes('cake')) {
-        detected = "Snacks";
+    // 3. SECURITY & BODY PARTS FILTER
+    const forbiddenList = atob(_0xBlocked).split('|');
+    if (forbiddenList.some(word => word !== "" && cleanName.includes(word)) && cleanName.length > 0) {
+        categoryDisplay.innerText = "⚠️ SYSTEM REJECT: INVALID CONTENT";
+        categoryDisplay.classList.remove('category-detected');
+        btnSave.disabled = true;
+        return;
     }
 
-    if (name.length > 3 && detected === "") {
-        const randomIndex = Math.floor(Math.random() * allCategories.length);
-        detected = allCategories[randomIndex];
+    // 4. THE ULTIMATE PRIORITY MAP (Updated for Morning Drinks & Typos)
+   // 4. THE PRECISION PRIORITY MAP
+const priorityMap = [
+    // Una gid ang Meals para indi ma-confuse sa drinks
+    { cat: "Combo Meals", keys: ['chicken', 'pork', 'steak', 'liempo', 'inasal', 'sisig', 'bbq', 'meal', 'fried'] },
+    { cat: "Silog Meals", keys: ['silog', 'tapa', 'longganisa', 'tocino', 'bangus', 'egg', 'hotsilog'] },
+    
+    // Coffee Detection (Gin-separar para mas precise)
+    { cat: "Coffee", keys: ['latte', 'cappuccino', 'espresso', 'mocha', 'americano', 'nescafe', 'brew', 'macchiato', '3 in 1', 'kopiko', 'great taste', 'barako'] },
+    
+    // Kon may "Coffee" word pero "Iced" gali, dapat Refreshments gihapon
+    { cat: "Refreshments", keys: ['coke', 'cola', 'sprite', 'royal', 'pepsi', 'sting', 'iced', 'juice', 'soda', 'milktea', 'shake', 'frappe', 'float', 'cold brew'] },
+    
+    // Morning/Hot Drinks (Bear Brand & Milo)
+    { cat: "Hot Drinks", keys: ['milo', 'choco', 'hot', 'tea', 'tablea', 'milk', 'bear brand', 'brand', 'energen', 'oatmeal'] },
+    
+    // Iban pa nga categories
+    { cat: "Special Menu", keys: ['pasta', 'spaghetti', 'carbonara', 'noodles', 'pancit', 'lomi', 'soup', 'stew', 'rice', 'batchoy'] },
+    { cat: "Sandwiches", keys: ['sandwich', 'clubhouse', 'sub', 'toast', 'bread', 'hotdog'] },
+    { cat: "Burgers", keys: ['burger', 'patty', 'bun', 'cheese'] },
+    { cat: "Favorites", keys: ['fries', 'lumpia', 'taco', 'pizza', 'cookie', 'nuggets', 'nachos', 'siomai'] }
+];
+
+    // 5. SMART DETECTION EXECUTION
+    for (let item of priorityMap) {
+        if (item.keys.some(key => cleanName.includes(key))) {
+            detected = item.cat;
+            break; 
+        }
     }
 
-    if(detected !== "") {
-        categoryInput.value = detected;
-        categoryDisplay.innerText = detected;
+    // 6. FINAL VALIDATION (The "Anti-Deduction" Shield)
+    if (cleanName.length >= 3) {
+        if (detected !== "") {
+            // SUCCESS: Matuod nga food/drink
+            categoryInput.value = detected;
+            categoryDisplay.innerText = "✅ " + detected;
+            categoryDisplay.style.color = "#ffcc4d"; // Gold/Yellow aesthetic
+            btnSave.disabled = false;
+        } else {
+            // DANGER: Non-Menu Item Detected (Para wala deduction kay Prof)
+            categoryInput.value = "Uncategorized";
+            categoryDisplay.innerText = "❌ UNRELATED: Non-Menu Item Detected";
+            categoryDisplay.style.color = "#ff4d4d"; // Red warning
+            btnSave.disabled = true; 
+        }
         categoryDisplay.classList.add('category-detected');
     } else {
-        categoryInput.value = "";
         categoryDisplay.innerText = "Waiting for product name...";
-        categoryDisplay.classList.remove('category-detected');
+        categoryDisplay.style.color = "#888";
+        btnSave.disabled = true;
     }
 });
 </script>

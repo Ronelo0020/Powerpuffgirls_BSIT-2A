@@ -35,3 +35,4 @@ $routes->get('auth/delete/(:num)', 'Auth::delete/$1');
 // Magdagdag sa ilalim ng existing dashboard route
 $routes->get('dashboard', 'Dashboard::index');
 $routes->get('dashboard/history', 'Dashboard::history'); // Ito ang kulang na route
+$routes->get('sales/get_filtered_data/(:any)', 'Sales::get_filtered_data/$1');
