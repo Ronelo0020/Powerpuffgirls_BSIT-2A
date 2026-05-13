@@ -10,7 +10,7 @@
     <style>
         body {
             background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
-                        url('<?= base_url("assets/img/rs.jpg") ?>'); 
+                        url('<?= base_url("assets/img/river.jpg") ?>'); 
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -28,20 +28,20 @@
             -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 24px;
-            padding: 40px;
+            padding: 30px 40px;
             width: 100%;
-            max-width: 450px; /* Gin-adjust gamay para sa dugang nga fields */
+            max-width: 500px; 
             box-shadow: 0 25px 50px rgba(0,0,0,0.6);
             color: white;
         }
 
         .brand-header {
             text-align: center;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
 
         .brand-title {
-            font-size: 2.5rem;
+            font-size: 2.3rem;
             font-weight: 800;
             margin-bottom: 5px;
             letter-spacing: -1.5px;
@@ -71,7 +71,7 @@
             border-radius: 12px;
             padding: 10px 16px;
             font-size: 0.9rem;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             border: none;
             transition: 0.3s ease;
         }
@@ -79,12 +79,6 @@
         .input-white {
             background: #ffffff !important;
             color: #1a1a1a !important;
-        }
-
-        /* Style para sa File Input */
-        .form-control[type="file"] {
-            padding: 8px 12px;
-            cursor: pointer;
         }
 
         .btn-register {
@@ -111,7 +105,7 @@
 
         .footer-text {
             text-align: center;
-            margin-top: 25px;
+            margin-top: 20px;
             font-size: 0.85rem;
             color: #999999;
         }
@@ -158,6 +152,21 @@
                 <input type="text" name="name" class="form-control input-white" placeholder="Juan Dela Cruz" required>
             </div>
 
+            <div class="row g-2">
+                <div class="col-md-6 mb-1">
+                    <label class="form-label">Gender</label>
+                    <select name="gender" class="form-select input-white" required>
+                        <option value="" disabled selected>Select</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                    </select>
+                </div>
+                <div class="col-md-6 mb-1">
+                    <label class="form-label">Birthdate</label>
+                    <input type="date" name="birthdate" class="form-control input-white" required>
+                </div>
+            </div>
+
             <div class="mb-1">
                 <label class="form-label">Email Address</label>
                 <input type="email" name="email" class="form-control input-white" placeholder="staff@gmail.com" required>
@@ -191,7 +200,7 @@
                 <input type="file" name="profile_pic" class="form-control input-white" accept="image/*">
             </div>
 
-            <div class="mb-1">
+            <div class="mb-3">
                 <label class="form-label">Password</label>
                 <input type="password" name="password" class="form-control input-white" placeholder="••••••••" required>
             </div>

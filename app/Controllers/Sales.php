@@ -103,4 +103,47 @@ class Sales extends BaseController {
 
         return ['labels' => $labels, 'values' => $values];
     }
+ public function calendar()
+{
+    $db = \Config\Database::connect();
+    
+    // Kunin ang kasalukuyang buwan at taon para sa initial load
+    $month = date('m'); 
+    $year = date('Y');
+
+    // DITO MO ILALAGAY: Query para sa Grand Total ng buong buwan
+    $total_month_query = $db->query("SELECT SUM(total_amount) as grand_total 
+                                     FROM orders 
+                                     WHERE MONTH(order_date) = ? AND YEAR(order_date) = ?", [$month, $year]);
+    $grand_total = $total_month_query->getRow()->grand_total ?? 0;
+
+    // Ang existing query mo para sa daily boxes
+    $query = $db->query("SELECT DATE(order_date) as date, SUM(total_amount) as total 
+                         FROM orders 
+                         WHERE MONTH(order_date) = ? AND YEAR(order_date) = ?
+                         GROUP BY DATE(order_date)", [$month, $year]);
+
+    $data = [
+        'sales_data'  => $query->getResultArray(),
+        'grand_total' => $grand_total, // I-pass natin ito sa View
+        'title'       => 'Sales Heatmap'
+    ];
+
+    return view('sales_calendar_view', $data);
+}
+
+public function get_heatmap_data()
+{
+    $month = $this->request->getGet('month');
+    $year = $this->request->getGet('year');
+    
+    $db = \Config\Database::connect();
+    
+    $query = $db->query("SELECT DATE(order_date) as date, SUM(total_amount) as total 
+                         FROM orders 
+                         WHERE MONTH(order_date) = ? AND YEAR(order_date) = ?
+                         GROUP BY DATE(order_date)", [$month, $year]);
+                         
+    return $this->response->setJSON($query->getResultArray());
+}
 }

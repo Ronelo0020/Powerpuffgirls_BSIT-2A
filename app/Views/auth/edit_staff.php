@@ -93,7 +93,7 @@
 </head>
 <body>
     <div class="container d-flex justify-content-center p-3">
-        <div class="card">
+        <div class="card shadow-lg">
             <div class="card-header-accent"></div>
             <div class="card-body p-4 p-md-5">
                 <div class="d-flex align-items-center justify-content-between mb-5">
@@ -102,7 +102,7 @@
                         <p class="text-muted-white small mb-0">Modifying account for <span class="text-white fw-bold"><?= esc($staff['name']) ?></span></p>
                     </div>
                     <div class="edit-avatar-container" id="avatar-preview-box">
-                        <?php if(!empty($staff['profile_pic'])): ?>
+                        <?php if(!empty($staff['profile_pic']) && file_exists(FCPATH . 'uploads/profiles/' . $staff['profile_pic'])): ?>
                             <img src="<?= base_url('uploads/profiles/'.$staff['profile_pic']) ?>" style="width:100%; height:100%; object-fit:cover;">
                         <?php else: ?>
                             <span><?= strtoupper(substr($staff['name'], 0, 1)) ?></span>
@@ -112,9 +112,24 @@
 
                 <form action="<?= base_url('auth/update/'.$staff['id']) ?>" method="post" enctype="multipart/form-data">
                     <div class="section-title">Basic Information</div>
+                    
                     <div class="mb-4">
                         <label>FULL NAME</label>
                         <input type="text" name="name" class="form-control" value="<?= esc($staff['name']) ?>" required>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <label>GENDER</label>
+                            <select name="gender" class="form-select" required>
+                                <option value="Male" <?= ($staff['gender'] ?? '') == 'Male' ? 'selected' : '' ?>>Male</option>
+                                <option value="Female" <?= ($staff['gender'] ?? '') == 'Female' ? 'selected' : '' ?>>Female</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <label>BIRTHDATE</label>
+                            <input type="date" name="birthdate" class="form-control" value="<?= esc($staff['birthdate'] ?? '') ?>" required>
+                        </div>
                     </div>
 
                     <div class="row">
@@ -153,13 +168,14 @@
                     </div>
 
                     <div class="d-flex justify-content-between align-items-center mt-4">
-                        <a href="<?= base_url('auth/manage') ?>" class="text-muted-white small text-decoration-none"><i class="fas fa-arrow-left"></i> Back</a>
+                        <a href="<?= base_url('auth/manage') ?>" class="text-muted-white small text-decoration-none"><i class="fas fa-arrow-left me-1"></i> Back</a>
                         <button type="submit" class="btn-save shadow">UPDATE PROFILE</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
+    
     <script>
         function previewImage(input) {
             if (input.files && input.files[0]) {

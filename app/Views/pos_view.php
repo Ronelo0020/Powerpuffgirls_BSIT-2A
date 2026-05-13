@@ -70,9 +70,9 @@
         </h4>
         
         <?php if (session()->get('role') === 'admin'): ?>
-            <small class="text-white d-block" style="opacity: 0.6; font-size: 0.75rem; letter-spacing: 1px;">ADMIN TERMINAL</small>
+            <small class="text-white d-block" style="opacity: 0.6; font-size: 0.75rem; letter-spacing: 1px;">ADMIN </small>
         <?php else: ?>
-            <small class="text-white d-block" style="opacity: 0.6; font-size: 0.75rem; letter-spacing: 1px;">STAFF TERMINAL</small>
+            <small class="text-white d-block" style="opacity: 0.6; font-size: 0.75rem; letter-spacing: 1px;">STAFF</small>
         <?php endif; ?>
     </div>
 
@@ -291,6 +291,7 @@
             }
         });
     });
+
 async function checkout() {
     if (cart.length === 0) return alert("Select products first.");
     
@@ -312,13 +313,12 @@ async function checkout() {
         formData.append('payment', tendered);
         formData.append('change_amount', tendered - total);
     } else {
-        // GCash Logic
         const refNo = document.getElementById('gcash-reference').value;
         const fileInput = document.getElementById('gcash-ss');
         
         if (!refNo) return alert("Please enter GCash Reference Number.");
         
-        payValue = total; // Sa GCash, saktong total ang bayad
+        payValue = total;
         formData.append('payment', total);
         formData.append('change_amount', 0);
         formData.append('gcash_reference', refNo);
@@ -337,7 +337,6 @@ async function checkout() {
         const data = await res.json();
         
         if (data.status === 'success') {
-            // I-populate ang Receipt Modal
             document.getElementById('receiptDateText').innerText = new Date().toLocaleString();
             document.getElementById('receiptOrderIDText').innerText = data.order_id;
             document.getElementById('receiptTotalText').innerText = "₱" + total.toFixed(2);
@@ -351,7 +350,6 @@ async function checkout() {
             });
             document.getElementById('receiptItemsList').innerHTML = itemsHtml;
             
-            // Ipakita ang Receipt
             new bootstrap.Modal(document.getElementById('receiptModal')).show();
         } else { 
             alert(data.message); 
@@ -361,19 +359,17 @@ async function checkout() {
         alert("Error saving order. Check console."); 
     }
 }
+
 function resetPOS() {
     console.log("New Order trigger!");
     
     try {
-        // 1. Linisin ang cart
         cart = [];
         
-        // 2. I-update ang UI Sidebar
         if (typeof updateCartUI === "function") {
             updateCartUI();
         }
 
-        // 3. Isara ang Modal
         const modalEl = document.getElementById('receiptModal');
         if (modalEl) {
             const modalInstance = bootstrap.Modal.getInstance(modalEl);
@@ -382,8 +378,6 @@ function resetPOS() {
             }
         }
 
-        // 4. Force Reload para sa panibagong Order ID at malinis na inputs
-        // Ito ang pinakasiguradong paraan para mag-reset ang POS
         setTimeout(() => {
             window.location.reload();
         }, 100);
@@ -393,7 +387,8 @@ function resetPOS() {
         window.location.reload();
     }
 }
-  function printReceipt() {
+
+function printReceipt() {
     const receiptData = {
         date: document.getElementById('receiptDateText').innerText,
         orderId: document.getElementById('receiptOrderIDText').innerText,
@@ -427,17 +422,27 @@ function resetPOS() {
                         color: black;
                         position: relative;
                     }
-                    /* Improvement: Logo Placeholder */
-                    .logo-container { text-align: center; margin-bottom: 10px; }
-                    .logo-placeholder { 
-                        font-size: 40px; 
-                        font-weight: bold; 
-                        border: 3px solid black; 
-                        display: inline-block; 
-                        padding: 5px 15px;
-                        margin-bottom: 10px;
+
+                    /* ── COFFEE CUP LOGO ── */
+                    .logo-container {
+                        text-align: center;
+                        margin-bottom: 14px;
                     }
-                    
+                    .logo-circle {
+                        width: 80px;
+                        height: 80px;
+                        background: #000;
+                        border-radius: 50%;
+                        display: inline-flex;
+                        align-items: center;
+                        justify-content: center;
+                        margin-bottom: 6px;
+                    }
+                    .logo-circle svg {
+                        width: 46px;
+                        height: 46px;
+                    }
+
                     .text-center { text-align: center; }
                     .dashed { border-top: 2px dashed #000; margin: 15px 0; }
                     .row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 16px; }
@@ -472,10 +477,28 @@ function resetPOS() {
                 <button class="no-print" onclick="window.print()">🖨️ PRINT ACTUAL RECEIPT</button>
                 
                 <div class="paper">
+
+                    <!-- COFFEE CUP LOGO (replaces the RC square) -->
                     <div class="logo-container">
-                        <div class="logo-placeholder">RC</div>
+                        <div class="logo-circle">
+                            <!-- Coffee cup SVG icon -->
+                            <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <!-- Steam wisps -->
+                                <path d="M22 10 Q23 6 22 2" stroke="white" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+                                <path d="M32 10 Q33 6 32 2" stroke="white" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+                                <path d="M42 10 Q43 6 42 2" stroke="white" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+                                <!-- Cup body -->
+                                <path d="M14 16 H50 L46 50 Q45.5 53 42 53 H22 Q18.5 53 18 50 Z" fill="white"/>
+                                <!-- Saucer -->
+                                <rect x="10" y="54" width="44" height="5" rx="2.5" fill="white"/>
+                                <!-- Handle -->
+                                <path d="M50 22 Q60 22 60 32 Q60 42 50 42" stroke="white" stroke-width="3" stroke-linecap="round" fill="none"/>
+                                <!-- Coffee liquid surface -->
+                                <ellipse cx="32" cy="20" rx="16" ry="4" fill="#5C3317"/>
+                            </svg>
+                        </div>
                     </div>
-                    
+
                     <div class="text-center header">
                         <h2>RIVERSIDE CAFÉ</h2>
                         <p>Burgos Street, Brgy. 8, Kabankalan City</p>

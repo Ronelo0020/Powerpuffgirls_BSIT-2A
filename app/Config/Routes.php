@@ -6,6 +6,7 @@ use CodeIgniter\Router\RouteCollection;
 
 // --- AUTHENTICATION ---
 $routes->get('/', 'Auth::index');
+$routes->get('auth/login', 'Auth::index');
 $routes->post('auth/loginProcess', 'Auth::loginProcess');
 $routes->get('logout', 'Auth::logout');
 
@@ -36,3 +37,7 @@ $routes->get('auth/delete/(:num)', 'Auth::delete/$1');
 $routes->get('dashboard', 'Dashboard::index');
 $routes->get('dashboard/history', 'Dashboard::history'); // Ito ang kulang na route
 $routes->get('sales/get_filtered_data/(:any)', 'Sales::get_filtered_data/$1');
+$routes->get('sales/calendar', 'Sales::calendar');
+$routes->get('auth/export_staff_csv', 'Auth::export_staff_csv');
+$routes->get('auth/forgot_password', 'Auth::forgot_password');
+$routes->post('auth/resetProcess', 'Auth::resetProcess');

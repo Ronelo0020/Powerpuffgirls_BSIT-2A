@@ -8,7 +8,7 @@ class User_model extends Model {
     protected $primaryKey = 'id';
 
     // FIX: Gindugangan sang 'profile_pic' para ma-save ang image filename
-    protected $allowedFields = ['name', 'username', 'email', 'password', 'role', 'duty_day', 'phone', 'profile_pic', 'created_at', 'updated_at'];
+    protected $allowedFields = ['name', 'username', 'email', 'password', 'role', 'duty_day', 'phone', 'profile_pic','gender', 'birthdate', 'created_at', 'updated_at'];
 
     protected $useTimestamps = true;
     protected $createdField  = 'created_at';

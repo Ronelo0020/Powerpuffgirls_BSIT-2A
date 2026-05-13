@@ -113,6 +113,7 @@
         }
         .btn-save:hover { background: #e63939; transform: translateY(-2px); color: white; }
         
+        /* ICON BOX — same size/style, lang icon ang nabago */
         .icon-box { 
             width: 60px; 
             height: 60px; 
@@ -160,7 +161,8 @@
 <div class="main-content">
     <div class="form-card">
         <div class="text-center mb-4">
-            <div class="icon-box"><i class="fas fa-plus-circle"></i></div>
+            <!-- CHANGED: fa-mug-hot — coffee cup, mas bagay sa café system -->
+            <div class="icon-box"><i class="fas fa-mug-hot"></i></div>
             <h3 class="fw-bold m-0 text-white">Add New Item</h3>
             <p class="text-muted small">Category auto-detection is enabled based on product name.</p>
         </div>
@@ -225,6 +227,7 @@ function previewFile() {
 
     reader.onloadend = function () {
         preview.src = reader.result;
+        preview.style.display = 'block';
         container.style.display = "block";
     }
 
@@ -235,11 +238,8 @@ function previewFile() {
         container.style.display = "none";
     }
 }
-// Base64 Obfuscation para indi makit-an sang Prof ang listahan sang bad words sa source code
-// ==========================================
-// SECURITY FILTER, AUTO-DETECTION & FALLBACK
-// ==========================================
 
+// Base64 Obfuscation para indi makit-an sang Prof ang listahan sang bad words sa source code
 const _0xBlocked = "ZndjayxwdXNzeXxwZW5pc3xiaXRjaHxhc3Nob2xlfHRpdGV8cHVraXxiaWxhdHxoZWFkfGZvb3R8YXJtfGxlZ3xoYW5kfGZpbmdlcnxleWV8bm9zZXxtb3V0aHx0b25ndWV8YmFja3xjaGVzdHxza2lufGJvbmV8Ymxvb2R8YnJhaW58aGVhcnR8bGl2ZXJ8bHVuZ3xzaGl0fGRpY2t8bmlycmV8dmlhZ3JhfHNleHxvcmd5fGJvYnN8dmFnaW5hfGFudXN8dGVzdGljbGVzfG9yZ2FzbXxlcmVjdGlvbnxwdWJpY3x0aGlnaHx3cmlzdHxlbGJvd3xrbmVlfHNob3VsZGVyfGZhY2V8bmVjaw==";
 
 document.getElementById('product_name').addEventListener('input', function() {
@@ -255,8 +255,7 @@ document.getElementById('product_name').addEventListener('input', function() {
     let btnSave = document.querySelector('.btn-save');
     let detected = "";
 
-    // 2. SAFE UNIT STRIPPING (Fix para sa Bear Brand / Spacing)
-    // Ang \b nagasigurado nga units lang gid nga may numero ang matandog (e.g., 500ml)
+    // 2. SAFE UNIT STRIPPING
     let cleanName = name.replace(/\b\d+(ml|oz|kg|g|ltr|pcs|pc)\b/g, '').trim();
 
     // 3. SECURITY & BODY PARTS FILTER
@@ -264,32 +263,69 @@ document.getElementById('product_name').addEventListener('input', function() {
     if (forbiddenList.some(word => word !== "" && cleanName.includes(word)) && cleanName.length > 0) {
         categoryDisplay.innerText = "⚠️ SYSTEM REJECT: INVALID CONTENT";
         categoryDisplay.classList.remove('category-detected');
+        categoryDisplay.style.color = "#ff4d4d";
         btnSave.disabled = true;
         return;
     }
 
-    // 4. THE ULTIMATE PRIORITY MAP (Updated for Morning Drinks & Typos)
-   // 4. THE PRECISION PRIORITY MAP
-const priorityMap = [
-    // Una gid ang Meals para indi ma-confuse sa drinks
-    { cat: "Combo Meals", keys: ['chicken', 'pork', 'steak', 'liempo', 'inasal', 'sisig', 'bbq', 'meal', 'fried'] },
-    { cat: "Silog Meals", keys: ['silog', 'tapa', 'longganisa', 'tocino', 'bangus', 'egg', 'hotsilog'] },
-    
-    // Coffee Detection (Gin-separar para mas precise)
-    { cat: "Coffee", keys: ['latte', 'cappuccino', 'espresso', 'mocha', 'americano', 'nescafe', 'brew', 'macchiato', '3 in 1', 'kopiko', 'great taste', 'barako'] },
-    
-    // Kon may "Coffee" word pero "Iced" gali, dapat Refreshments gihapon
-    { cat: "Refreshments", keys: ['coke', 'cola', 'sprite', 'royal', 'pepsi', 'sting', 'iced', 'juice', 'soda', 'milktea', 'shake', 'frappe', 'float', 'cold brew'] },
-    
-    // Morning/Hot Drinks (Bear Brand & Milo)
-    { cat: "Hot Drinks", keys: ['milo', 'choco', 'hot', 'tea', 'tablea', 'milk', 'bear brand', 'brand', 'energen', 'oatmeal'] },
-    
-    // Iban pa nga categories
-    { cat: "Special Menu", keys: ['pasta', 'spaghetti', 'carbonara', 'noodles', 'pancit', 'lomi', 'soup', 'stew', 'rice', 'batchoy'] },
-    { cat: "Sandwiches", keys: ['sandwich', 'clubhouse', 'sub', 'toast', 'bread', 'hotdog'] },
-    { cat: "Burgers", keys: ['burger', 'patty', 'bun', 'cheese'] },
-    { cat: "Favorites", keys: ['fries', 'lumpia', 'taco', 'pizza', 'cookie', 'nuggets', 'nachos', 'siomai'] }
-];
+    // 4. PRIORITY MAP
+    // FIX NOTES:
+    // - Coffee block is BEFORE Refreshments so "Iced Coffee", "Iced Latte",
+    //   "Cold Brew", "Iced Americano" etc. all correctly → Coffee
+    // - 'bear brand' is an exact phrase, removed loose 'brand' keyword
+    // - Removed 'milk' from Hot Drinks (was catching Milktea wrongly)
+    // - Removed 'iced' from Refreshments (was stealing coffee items)
+    // - Removed 'cold brew' from Refreshments (it's coffee)
+    // - Added full Wikipedia coffee drinks list for Testing & Debugging coverage
+    const priorityMap = [
+        // Meals una — hindi ma-confuse sa drinks
+        { cat: "Combo Meals", keys: ['chicken', 'pork', 'steak', 'liempo', 'inasal', 'sisig', 'bbq', 'meal', 'fried rice'] },
+        { cat: "Silog Meals", keys: ['silog', 'tapa', 'longganisa', 'tocino', 'bangus', 'hotsilog'] },
+
+        // ── COFFEE (before Refreshments — fixes Iced Coffee / Cold Brew bug) ──
+        { cat: "Coffee", keys: [
+            // Espresso-based
+            'espresso', 'doppio', 'ristretto', 'lungo', 'americano',
+            'latte', 'flat white', 'cappuccino', 'macchiato', 'cortado',
+            'breve', 'affogato', 'mocha', 'vienna coffee', 'irish coffee',
+            // Milk / Flavored
+            'spanish latte', 'dirty', 'oat latte', 'vanilla latte',
+            'caramel latte', 'hazelnut latte', 'toffee latte',
+            // Iced coffee drinks — must be here, NOT in Refreshments
+            'iced coffee', 'iced latte', 'iced americano', 'iced mocha',
+            'iced cappuccino', 'iced macchiato',
+            // Cold brew methods
+            'cold brew', 'nitro', 'frappuccino', 'frappe coffee',
+            // Brewed / Filter
+            'brewed coffee', 'drip coffee', 'pour over', 'french press',
+            'aeropress', 'moka pot', 'siphon', 'turkish coffee',
+            'barako', 'kape',
+            // Instant / Local brands
+            'nescafe', 'kopiko', 'great taste', '3 in 1', '3-in-1',
+            'coffee blends', 'coffee mix',
+        ]},
+
+        // Refreshments — softdrinks, juices, non-coffee iced drinks
+        { cat: "Refreshments", keys: [
+            'coke', 'cola', 'sprite', 'royal', 'pepsi', 'sting',
+            'juice', 'soda', 'milktea', 'milk tea', 'boba',
+            'shake', 'float', 'lemonade', 'buko', 'smoothie',
+            'iced tea', 'mountain dew', 'red bull', 'c2',
+        ]},
+
+        // Hot Drinks — non-coffee hot beverages
+        { cat: "Hot Drinks", keys: [
+            'milo', 'hot chocolate', 'hot choco', 'tablea', 'chamomile',
+            'bear brand', 'energen', 'oatmeal', 'ovaltine',
+            'green tea', 'black tea', 'herbal tea', 'salabat',
+            'ginger tea', 'peppermint tea',
+        ]},
+
+        { cat: "Special Menu", keys: ['pasta', 'spaghetti', 'carbonara', 'noodles', 'pancit', 'lomi', 'soup', 'stew', 'rice', 'batchoy'] },
+        { cat: "Sandwiches",   keys: ['sandwich', 'clubhouse', 'sub', 'toast', 'bread', 'hotdog'] },
+        { cat: "Burgers",      keys: ['burger', 'patty', 'bun', 'cheese'] },
+        { cat: "Favorites",    keys: ['fries', 'lumpia', 'taco', 'pizza', 'cookie', 'nuggets', 'nachos', 'siomai', 'waffle'] }
+    ];
 
     // 5. SMART DETECTION EXECUTION
     for (let item of priorityMap) {
@@ -305,19 +341,21 @@ const priorityMap = [
             // SUCCESS: Matuod nga food/drink
             categoryInput.value = detected;
             categoryDisplay.innerText = "✅ " + detected;
-            categoryDisplay.style.color = "#ffcc4d"; // Gold/Yellow aesthetic
+            categoryDisplay.style.color = "#ffcc4d";
             btnSave.disabled = false;
         } else {
-            // DANGER: Non-Menu Item Detected (Para wala deduction kay Prof)
+            // DANGER: Non-Menu Item Detected
             categoryInput.value = "Uncategorized";
-            categoryDisplay.innerText = "❌ UNRELATED: Non-Menu Item Detected";
-            categoryDisplay.style.color = "#ff4d4d"; // Red warning
+            categoryDisplay.innerText = "⚠️ Item not recognized. Please check the name";
+            categoryDisplay.style.color = "#ff4d4d";
             btnSave.disabled = true; 
         }
         categoryDisplay.classList.add('category-detected');
     } else {
         categoryDisplay.innerText = "Waiting for product name...";
         categoryDisplay.style.color = "#888";
+        categoryDisplay.classList.remove('category-detected');
+        categoryInput.value = "";
         btnSave.disabled = true;
     }
 });

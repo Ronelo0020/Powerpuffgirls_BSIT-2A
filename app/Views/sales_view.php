@@ -19,7 +19,6 @@
 
         .main-content { flex: 1; padding: 30px; overflow-y: auto; }
         
-        /* Clickable Stats Card */
         .stat-card { background: var(--card-dark); border-radius: 20px; border: 1px solid #333; padding: 25px; height: 100%; transition: 0.3s; }
         .stat-card.clickable:hover { border-color: var(--accent-gold); transform: translateY(-5px); cursor: pointer; }
         
@@ -40,12 +39,9 @@
         <h4 class="fw-bold mb-0">
             <span style="color: var(--accent-gold);">Riverside</span> <span style="color: white;">Café</span>
         </h4>
-        
-        <?php if (session()->get('role') === 'admin'): ?>
-            <small class="text-white d-block" style="opacity: 0.6; font-size: 0.75rem; letter-spacing: 1px;">ADMIN TERMINAL</small>
-        <?php else: ?>
-            <small class="text-white d-block" style="opacity: 0.6; font-size: 0.75rem; letter-spacing: 1px;">STAFF TERMINAL</small>
-        <?php endif; ?>
+        <small class="text-white d-block" style="opacity: 0.6; font-size: 0.75rem; letter-spacing: 1px;">
+            <?= (session()->get('role') === 'admin') ? 'ADMIN' : 'STAFF' ?>
+        </small>
     </div>
 
     <nav class="d-flex flex-column h-100">
@@ -87,19 +83,26 @@
                 <div class="stat-value text-success">₱<?= number_format($daily_revenue, 2) ?></div>
             </div>
         </div>
+
         <div class="col-md-3">
-    <div class="stat-card clickable" style="border-left: 4px solid var(--accent-gold);" onclick="updateChart('monthly')">
-        <span class="stat-label" style="color: var(--accent-gold);">Total Revenue</span>
-        <div class="stat-value">₱<?= number_format($total_revenue ?? 0, 2) ?></div>
-        <small class="text-white" style="font-size: 0.6rem; opacity: 0.8;">Click to see monthly trend</small>
-    </div>
-</div>
+            <a href="<?= base_url('sales/calendar') ?>" style="text-decoration: none;">
+                <div class="stat-card clickable" style="border-left: 4px solid var(--accent-gold);">
+                    <span class="stat-label" style="color: var(--accent-gold);">Total Revenue</span>
+                    <div class="stat-value">₱<?= number_format($total_revenue ?? 0, 2) ?></div>
+                    <small class="text-white" style="font-size: 0.6rem; opacity: 0.8;">
+                        <i class="fas fa-calendar-alt me-1"></i> Click to view Sales Heatmap
+                    </small>
+                </div>
+            </a>
+        </div>
+
         <div class="col-md-3">
             <div class="stat-card">
                 <span class="stat-label">Monthly Orders</span>
                 <div class="stat-value"><?= number_format($monthly_orders) ?></div>
             </div>
         </div>
+
         <div class="col-md-3">
             <div class="stat-card">
                 <span class="stat-label">Lifetime Orders</span>
@@ -168,7 +171,6 @@
                 salesChart.data.datasets[0].data = data.values;
                 salesChart.update();
 
-                // UI Updates
                 document.getElementById('chartTitle').innerText = `Revenue Growth (${type.charAt(0).toUpperCase() + type.slice(1)})`;
                 document.querySelectorAll('.btn-group .btn').forEach(b => b.classList.remove('active'));
                 document.getElementById('btn-' + type).classList.add('active');

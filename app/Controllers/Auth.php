@@ -106,6 +106,8 @@ public function manage() {
         $data = [
             'name'     => $this->request->getPost('name'),
             'email'    => $this->request->getPost('email'),
+            'gender'    => $this->request->getPost('gender'),    // Catch Gender
+    'birthdate' => $this->request->getPost('birthdate'), // Catch Birthdate
             'password' => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
             'role'     => $this->request->getPost('role') ?? 'staff',
             'duty_day' => $this->request->getPost('duty_day') 
@@ -126,16 +128,18 @@ public function manage() {
     }
 
     // FIXED: Updated Update Function para sa Image Upload
-    public function update($id) {
+public function update($id) {
         $model = new User_model();
         
-        // 1. Prepare base data
+        // 1. Prepare base data - Added gender and birthdate here
         $data = [
-            'name'     => $this->request->getPost('name'),
-            'email'    => $this->request->getPost('email'),
-            'role'     => $this->request->getPost('role'),
-            'duty_day' => $this->request->getPost('duty_day'),
-            'phone'    => $this->request->getPost('phone'),
+            'name'      => $this->request->getPost('name'),
+            'email'     => $this->request->getPost('email'),
+            'role'      => $this->request->getPost('role'),
+            'duty_day'  => $this->request->getPost('duty_day'),
+            'phone'     => $this->request->getPost('phone'),
+            'gender'    => $this->request->getPost('gender'),    // DINAGDAG
+            'birthdate' => $this->request->getPost('birthdate'), // DINAGDAG
         ];
 
         // 2. Handle Image Upload
@@ -157,6 +161,7 @@ public function manage() {
             }
         }
         
+        // Update the database
         if ($model->update($id, $data)) {
             return redirect()->to(base_url('auth/manage'))->with('msg', 'Updated Successfully!');
         } else {
@@ -176,4 +181,83 @@ public function manage() {
         $model->delete($id);
         return redirect()->to(base_url('auth/manage'))->with('msg', 'Staff Deleted!');
     }
+    
+    public function export_staff_csv()
+{
+    $db = \Config\Database::connect();
+    
+    // Kunin lahat ng staff at admin
+    $users = $db->table('users')->select('name, email, role, phone, duty_day')->get()->getResultArray();
+
+    if (empty($users)) {
+        return redirect()->back()->with('error', 'No data to export.');
+    }
+
+    $filename = "Riverside_Staff_List_" . date('Y-m-d') . ".csv";
+
+    // Set headers para sa browser download
+    header("Content-Description: File Transfer");
+    header("Content-Disposition: attachment; filename=$filename");
+    header("Content-Type: text/csv;");
+
+    // Buksan ang output stream
+    $file = fopen('php://output', 'w');
+
+    // CSV Header Columns (Eto yung lalabas sa first row ng Excel)
+    fputcsv($file, ['FULL NAME', 'EMAIL ADDRESS', 'POSITION', 'CONTACT NUMBER', 'DUTY SCHEDULE']);
+
+    // Isulat ang bawat user data
+    foreach ($users as $user) {
+        fputcsv($file, [
+            $user['name'],
+            $user['email'],
+            strtoupper($user['role']),
+            $user['phone'] ?? 'N/A',
+            $user['duty_day'] ?? 'Not Set'
+        ]);
+    }
+
+    fclose($file);
+    exit;
+}
+// I-add ini sa imo Auth.php controller
+
+public function forgot_password() {
+    return view('auth/forgot_password');
+}public function resetProcess() 
+{
+    // 1. Mas maayo gamiton ang service('session') para sigurado nga active ang session
+    $session = \Config\Services::session(); 
+    $model = new \App\Models\User_model();
+
+    // 2. Kuhaon ang data halin sa form
+    $email   = $this->request->getPost('email');
+    $newPass = $this->request->getPost('new_password');
+
+    // 3. Pangitaon ang user base sa email
+    $user = $model->where('email', $email)->first();
+
+    if ($user) {
+        // 4. I-hash ang bag-o nga password
+        $hashedPassword = password_hash($newPass, PASSWORD_DEFAULT);
+        
+        // 5. I-update ang database gamit ang ID sang user
+        if ($model->update($user['id'], ['password' => $hashedPassword])) {
+            
+            // Success! Gamiton ang setFlashdata para sa 'msg'
+            $session->setFlashdata('msg', 'Password updated successfully for ' . esc($user['name']));
+            
+            // I-redirect gid sa auth/manage para makita ang table kag alert
+            return redirect()->to(base_url('auth/manage'));
+        } else {
+            // Kon may error sa database update
+            $session->setFlashdata('error', 'Failed to update password. Please try again.');
+            return redirect()->back();
+        }
+    } else {
+        // 6. Kon wala ang email sa record
+        $session->setFlashdata('error', 'The email address "' . esc($email) . '" was not found.');
+        return redirect()->back()->withInput(); 
+    }
+}
 }
