@@ -231,28 +231,45 @@
             color: #1a1a1a !important;
         }
 
+       /* ── Submit Button ── */
         .btn-register {
-            background-color: #ff0000;
+            background: linear-gradient(135deg, var(--red) 0%, #c51a1a 100%);
             color: #ffffff;
             border: none;
-            border-radius: 12px;
-            padding: 14px;
+            border-radius: 11px;
+            padding: 13px;
             width: 100%;
-            font-weight: 800;
-            font-size: 1rem;
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 700;
+            font-size: 0.875rem;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-top: 10px;
-            box-shadow: 0 4px 15px rgba(255, 0, 0, 0.3);
-            transition: 0.3s;
+            letter-spacing: 2px;
+            margin-top: 20px;
+            box-shadow: 0 4px 20px var(--red-glow), 0 1px 0 rgba(255,255,255,0.15) inset;
+            transition: transform 0.18s, box-shadow 0.18s, background 0.18s;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
         }
-
+ 
+        .btn-register::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(255,255,255,0.08) 0%, transparent 60%);
+            border-radius: inherit;
+        }
+ 
         .btn-register:hover {
-            background-color: #cc0000;
+            background: linear-gradient(135deg, #f02828 0%, var(--red-dark) 100%);
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255, 0, 0, 0.4);
+            box-shadow: 0 8px 28px var(--red-glow);
         }
-
+ 
+        .btn-register:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 12px var(--red-glow);
+        }
         .footer-text {
             text-align: center;
             margin-top: 20px;
