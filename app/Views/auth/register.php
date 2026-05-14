@@ -101,26 +101,46 @@
             color: white;
         }
 
+        /* ── Brand Header ── */
         .brand-header {
-            text-align: center;
-            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 28px;
+            padding-bottom: 22px;
+            border-bottom: 1px solid rgba(255,255,255,0.07);
         }
-
+ 
+        .brand-icon {
+            width: 46px; height: 46px;
+            background: var(--red);
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.3rem;
+            box-shadow: 0 4px 20px var(--red-glow);
+            flex-shrink: 0;
+        }
+ 
+        .brand-text-block { line-height: 1; }
+ 
         .brand-title {
-            font-size: 2.3rem;
-            font-weight: 800;
-            margin-bottom: 5px;
-            letter-spacing: -1.5px;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.75rem;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+            line-height: 1.1;
         }
-
-        .brand-title .riverside { color: #ff0000; } 
+ 
+        .brand-title .riverside { color: var(--red); }
         .brand-title .cafe { color: #ffffff; }
-
-        .sub-text {
-            color: #ffffff;
-            font-weight: 600;
-            font-size: 0.9rem;
-            letter-spacing: 0.5px;
+ 
+        .brand-sub {
+            font-size: 0.72rem;
+            font-weight: 500;
+            color: var(--label-color);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 5px;
         }
 
         .form-label {
