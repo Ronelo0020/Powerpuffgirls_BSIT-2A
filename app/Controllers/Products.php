@@ -34,27 +34,33 @@ class Products extends BaseController {
         return view('add_product_view', $data);
     }
 
-    public function store() {
-        $model = new Product_model();
-        $file = $this->request->getFile('product_image');
-        $imageName = 'no-image.png'; 
+public function store() {
+    $model = new Product_model();
+    $file = $this->request->getFile('product_image');
+    $imageName = 'no-image.png'; 
 
-        if ($file && $file->isValid() && !$file->hasMoved()) {
-            $imageName = $file->getName(); 
-            $file->move(FCPATH . 'assets/img/products/', $imageName);
-        }
-
-        $data = [
-            'product_name' => $this->request->getPost('product_name'), 
-            'category'     => $this->request->getPost('category'),
-            'price'        => $this->request->getPost('price'),
-            'stock'        => $this->request->getPost('stock'),
-            'image'        => $imageName 
-        ];
-
-        $model->insert($data);
-        return redirect()->to(base_url('products'))->with('status', 'Item Added!');
+    if ($file && $file->isValid() && !$file->hasMoved()) {
+        // Mas safe gamit ang getRandomName() para indi mag-duplicate ang filename sa folder
+        $imageName = $file->getRandomName(); 
+        $file->move(FCPATH . 'assets/img/products/', $imageName);
     }
+
+    $data = [
+        'product_name' => $this->request->getPost('product_name'), 
+        'category'     => $this->request->getPost('category'),
+        'price'        => $this->request->getPost('price'),
+        'stock'        => $this->request->getPost('stock'),
+        'image'        => $imageName 
+    ];
+
+    // Check natin kung nag-insert gid
+    if ($model->insert($data)) {
+        // Ginhimo ko 'success' ang key para mag-match sa View code natin
+        return redirect()->to(base_url('products'))->with('success', '✅ ' . $data['product_name'] . ' has been added to inventory!');
+    } else {
+        return redirect()->back()->with('error', '❌ Something went wrong while saving the item.');
+    }
+}
 
     public function edit($id = null) {
         $model = new Product_model();
