@@ -44,6 +44,8 @@
             border-left: 4px solid var(--riverside-gold);
             border-radius: 15px;
             animation: slideDown 0.5s ease-out;
+            /* Inilagay ang transition para sa smooth fade out */
+            transition: opacity 1s ease, transform 1s ease;
         }
 
         @keyframes slideDown {
@@ -142,8 +144,8 @@
 
 <div class="main-content">
 
-   <?php if (session()->get('role')): ?>
-    <div class="alert welcome-alert alert-dismissible fade show mb-4 py-3" role="alert">
+<?php if (session()->get('role')): ?>
+    <div class="alert welcome-alert alert-dismissible fade show mb-4 py-3" id="welcomeAlert" role="alert">
         <div class="d-flex align-items-center">
             <div class="me-3">
                 <i class="fas fa-user-shield fa-2x" style="color: var(--riverside-gold);"></i>
@@ -256,5 +258,25 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const welcomeAlert = document.getElementById('welcomeAlert');
+        if (welcomeAlert) {
+            // Wait for 5 seconds (5000ms)
+            setTimeout(function() {
+                welcomeAlert.style.opacity = "0";
+                welcomeAlert.style.transform = "translateY(-10px)";
+                
+                // Final dismissal after fade
+                setTimeout(function() {
+                    const bsAlert = new bootstrap.Alert(welcomeAlert);
+                    bsAlert.close();
+                }, 800); 
+            }, 5000); 
+        }
+    });
+</script>
+
 </body>
 </html>
