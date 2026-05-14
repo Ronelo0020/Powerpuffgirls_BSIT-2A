@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Riverside Café | Registration</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
     
     <style>
-         :root {
+        :root {
             --red: #e02020;
             --red-dark: #b01515;
             --red-glow: rgba(224, 32, 32, 0.35);
@@ -21,10 +21,10 @@
             --text-muted: rgba(255, 255, 255, 0.35);
             --cream: #f5ede0;
         }
- 
+
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
-          body {
+        body {
             background: linear-gradient(160deg, rgba(0,0,0,0.82) 0%, rgba(10,4,2,0.78) 100%),
                         url('<?= base_url("assets/img/river.jpg") ?>');
             background-size: cover;
@@ -37,7 +37,7 @@
             justify-content: center;
             padding: 30px 16px;
         }
- 
+
         /* Ambient glow orbs */
         body::before {
             content: '';
@@ -59,7 +59,7 @@
             pointer-events: none;
             z-index: 0;
         }
- 
+
         .card-wrapper {
             position: relative;
             z-index: 1;
@@ -69,11 +69,11 @@
             opacity: 0;
             transform: translateY(24px);
         }
- 
+
         @keyframes slideUp {
             to { opacity: 1; transform: translateY(0); }
         }
- 
+
         /* Decorative top accent line */
         .card-wrapper::before {
             content: '';
@@ -110,7 +110,7 @@
             padding-bottom: 22px;
             border-bottom: 1px solid rgba(255,255,255,0.07);
         }
- 
+
         .brand-icon {
             width: 46px; height: 46px;
             background: var(--red);
@@ -120,9 +120,9 @@
             box-shadow: 0 4px 20px var(--red-glow);
             flex-shrink: 0;
         }
- 
+
         .brand-text-block { line-height: 1; }
- 
+
         .brand-title {
             font-family: 'Playfair Display', serif;
             font-size: 1.75rem;
@@ -130,10 +130,10 @@
             letter-spacing: -0.5px;
             line-height: 1.1;
         }
- 
+
         .brand-title .riverside { color: var(--red); }
         .brand-title .cafe { color: #ffffff; }
- 
+
         .brand-sub {
             font-size: 0.72rem;
             font-weight: 500;
@@ -143,17 +143,7 @@
             margin-top: 5px;
         }
 
-        .form-label {
-            font-size: 0.65rem;
-            font-weight: 800;
-            color: #aaaaaa; 
-            text-transform: uppercase;
-            margin-bottom: 6px;
-            display: block;
-            letter-spacing: 1px;
-        }
-
-          /* ── Form Elements ── */
+        /* ── Form Elements ── */
         .form-label {
             font-size: 0.62rem;
             font-weight: 600;
@@ -163,7 +153,7 @@
             margin-bottom: 7px;
             display: block;
         }
- 
+
         .form-control,
         .form-select {
             background: var(--input-bg) !important;
@@ -176,9 +166,9 @@
             transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
             margin-bottom: 0;
         }
- 
+
         .form-control::placeholder { color: rgba(255,255,255,0.25); }
- 
+
         .form-control:focus,
         .form-select:focus {
             background: rgba(255,255,255,0.09) !important;
@@ -187,18 +177,18 @@
             outline: none;
             color: #fff !important;
         }
- 
+
         .form-select option {
             background: #1a1a1a;
             color: #fff;
         }
- 
+
         /* Date input calendar icon color fix */
         input[type="date"]::-webkit-calendar-picker-indicator {
             filter: invert(1) opacity(0.4);
             cursor: pointer;
         }
- 
+
         /* File input */
         input[type="file"].form-control {
             padding: 8px 14px;
@@ -221,17 +211,31 @@
         input[type="file"]::file-selector-button:hover {
             background: rgba(224,32,32,0.3);
         }
- 
+
         /* ── Field groups ── */
         .field-group { margin-bottom: 14px; }
         .field-group .row { --bs-gutter-x: 10px; }
 
-        .input-white {
-            background: #ffffff !important;
-            color: #1a1a1a !important;
+        /* Section divider */
+        .section-label {
+            font-size: 0.6rem;
+            font-weight: 700;
+            color: var(--red);
+            text-transform: uppercase;
+            letter-spacing: 2.5px;
+            margin: 18px 0 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .section-label::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(255,255,255,0.07);
         }
 
-       /* ── Submit Button ── */
+        /* ── Submit Button ── */
         .btn-register {
             background: linear-gradient(135deg, var(--red) 0%, #c51a1a 100%);
             color: #ffffff;
@@ -251,7 +255,7 @@
             position: relative;
             overflow: hidden;
         }
- 
+
         .btn-register::after {
             content: '';
             position: absolute;
@@ -259,125 +263,169 @@
             background: linear-gradient(180deg, rgba(255,255,255,0.08) 0%, transparent 60%);
             border-radius: inherit;
         }
- 
+
         .btn-register:hover {
             background: linear-gradient(135deg, #f02828 0%, var(--red-dark) 100%);
             transform: translateY(-2px);
             box-shadow: 0 8px 28px var(--red-glow);
         }
- 
+
         .btn-register:active {
             transform: translateY(0);
             box-shadow: 0 2px 12px var(--red-glow);
         }
+
+        /* ── Footer ── */
         .footer-text {
             text-align: center;
-            margin-top: 20px;
-            font-size: 0.85rem;
-            color: #999999;
+            margin-top: 18px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
         }
 
         .footer-text a {
-            color: #ffffff; 
+            color: rgba(255,255,255,0.65);
             text-decoration: none;
-            font-weight: 700;
+            font-weight: 600;
+            transition: color 0.2s;
         }
 
-        .footer-text a:hover { color: #ff0000; }
+        .footer-text a:hover { color: var(--red); }
 
+        /* ── Alert ── */
         .alert-custom {
-            background: rgba(255, 0, 0, 0.2);
-            border: 1px solid #ff0000;
-            color: white;
+            background: rgba(224, 32, 32, 0.15);
+            border: 1px solid rgba(224, 32, 32, 0.4);
+            color: rgba(255,255,255,0.9);
             font-size: 0.8rem;
             border-radius: 10px;
+            padding: 10px 14px;
             margin-bottom: 20px;
+            text-align: center;
+        }
+
+        /* ── Staggered field animation ── */
+        .field-group:nth-child(1) { animation: fadeField 0.5s 0.15s both; }
+        .field-group:nth-child(2) { animation: fadeField 0.5s 0.22s both; }
+        .field-group:nth-child(3) { animation: fadeField 0.5s 0.29s both; }
+        .field-group:nth-child(4) { animation: fadeField 0.5s 0.36s both; }
+        .field-group:nth-child(5) { animation: fadeField 0.5s 0.43s both; }
+        .field-group:nth-child(6) { animation: fadeField 0.5s 0.50s both; }
+        .field-group:nth-child(7) { animation: fadeField 0.5s 0.57s both; }
+
+        @keyframes fadeField {
+            from { opacity: 0; transform: translateY(8px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 480px) {
+            .glass-card { padding: 28px 22px 24px; }
+            .brand-title { font-size: 1.5rem; }
         }
     </style>
 </head>
 <body>
 
-    <div class="glass-card">
-        <div class="brand-header">
-            <div class="brand-title">
-                <span class="riverside">Riverside</span><span class="cafe">Café</span>
+    <div class="card-wrapper">
+        <div class="glass-card">
+
+            <!-- Brand Header -->
+            <div class="brand-header">
+                <div class="brand-icon">☕</div>
+                <div class="brand-text-block">
+                    <div class="brand-title">
+                        <span class="riverside">Riverside</span><span class="cafe"> Café</span>
+                    </div>
+                    <div class="brand-sub">Staff Registration</div>
+                </div>
             </div>
-            <div class="sub-text">Staff Registration Panel</div>
+
+            <?php if(session()->getFlashdata('msg')): ?>
+                <div class="alert-custom">
+                    <?= session()->getFlashdata('msg') ?>
+                </div>
+            <?php endif; ?>
+
+            <form action="<?= base_url('auth/store') ?>" method="POST" enctype="multipart/form-data">
+                <?= csrf_field() ?>
+
+                <!-- Personal Info -->
+                <div class="section-label">Personal Info</div>
+
+                <div class="field-group">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" name="name" class="form-control" placeholder="Juan Dela Cruz" required>
+                </div>
+
+                <div class="field-group">
+                    <div class="row g-2">
+                        <div class="col-6">
+                            <label class="form-label">Gender</label>
+                            <select name="gender" class="form-select" required>
+                                <option value="" disabled selected>Select</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </select>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label">Birthdate</label>
+                            <input type="date" name="birthdate" class="form-control" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field-group">
+                    <label class="form-label">Email Address</label>
+                    <input type="email" name="email" class="form-control" placeholder="staff@gmail.com" required>
+                </div>
+
+                <!-- Account Setup -->
+                <div class="section-label">Account Setup</div>
+
+                <div class="field-group">
+                    <div class="row g-2">
+                        <div class="col-6">
+                            <label class="form-label">Role</label>
+                            <select name="role" class="form-select" required>
+                                <option value="staff" selected>Staff</option>
+                                <option value="admin">Admin</option>
+                            </select>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label">Duty Day</label>
+                            <select name="duty_day" class="form-select">
+                                <option value="Monday">Monday</option>
+                                <option value="Tuesday">Tuesday</option>
+                                <option value="Wednesday">Wednesday</option>
+                                <option value="Thursday">Thursday</option>
+                                <option value="Friday">Friday</option>
+                                <option value="Saturday">Saturday</option>
+                                <option value="Sunday">Sunday</option>
+                                <option value="Everyday">Everyday</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field-group">
+                    <label class="form-label">Profile Picture</label>
+                    <input type="file" name="profile_pic" class="form-control" accept="image/*">
+                </div>
+
+                <div class="field-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" name="password" class="form-control" placeholder="••••••••" required>
+                </div>
+
+                <button type="submit" class="btn-register">Create Account</button>
+
+                <div class="footer-text">
+                    Done with setup? <a href="<?= base_url('auth/manage') ?>">Return to Staff Management</a>
+                </div>
+
+            </form>
         </div>
-
-        <?php if(session()->getFlashdata('msg')): ?>
-            <div class="alert alert-custom text-center">
-                <?= session()->getFlashdata('msg') ?>
-            </div>
-        <?php endif; ?>
-
-        <form action="<?= base_url('auth/store') ?>" method="POST" enctype="multipart/form-data">
-            <?= csrf_field() ?>
-
-            <div class="mb-1">
-                <label class="form-label">Full Name</label>
-                <input type="text" name="name" class="form-control input-white" placeholder="Juan Dela Cruz" required>
-            </div>
-
-            <div class="row g-2">
-                <div class="col-md-6 mb-1">
-                    <label class="form-label">Gender</label>
-                    <select name="gender" class="form-select input-white" required>
-                        <option value="" disabled selected>Select</option>
-                        <option value="Male">Male</option>
-                        <option value="Female">Female</option>
-                    </select>
-                </div>
-                <div class="col-md-6 mb-1">
-                    <label class="form-label">Birthdate</label>
-                    <input type="date" name="birthdate" class="form-control input-white" required>
-                </div>
-            </div>
-
-            <div class="mb-1">
-                <label class="form-label">Email Address</label>
-                <input type="email" name="email" class="form-control input-white" placeholder="staff@gmail.com" required>
-            </div>
-
-            <div class="row g-2">
-                <div class="col-md-6 mb-1">
-                    <label class="form-label">Role</label>
-                    <select name="role" class="form-select input-white" required>
-                        <option value="staff" selected>Staff</option>
-                        <option value="admin">Admin</option>
-                    </select>
-                </div>
-                <div class="col-md-6 mb-1">
-                    <label class="form-label">Duty Day</label>
-                    <select name="duty_day" class="form-select input-white">
-                        <option value="Monday">Monday</option>
-                        <option value="Tuesday">Tuesday</option>
-                        <option value="Wednesday">Wednesday</option>
-                        <option value="Thursday">Thursday</option>
-                        <option value="Friday">Friday</option>
-                        <option value="Saturday">Saturday</option>
-                        <option value="Sunday">Sunday</option>
-                        <option value="Everyday">Everyday</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="mb-1">
-                <label class="form-label">Profile Picture</label>
-                <input type="file" name="profile_pic" class="form-control input-white" accept="image/*">
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Password</label>
-                <input type="password" name="password" class="form-control input-white" placeholder="••••••••" required>
-            </div>
-
-            <button type="submit" class="btn btn-register">Create Account</button>
-
-            <div class="footer-text">
-                Done with setup? <a href="<?= base_url('auth/manage') ?>">Return to Staff Management</a>
-            </div>
-        </form>
     </div>
 
 </body>
