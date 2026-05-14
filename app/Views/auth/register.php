@@ -153,14 +153,78 @@
             letter-spacing: 1px;
         }
 
-        .form-control, .form-select {
-            border-radius: 12px;
-            padding: 10px 16px;
-            font-size: 0.9rem;
-            margin-bottom: 12px;
-            border: none;
-            transition: 0.3s ease;
+          /* ── Form Elements ── */
+        .form-label {
+            font-size: 0.62rem;
+            font-weight: 600;
+            color: var(--label-color);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 7px;
+            display: block;
         }
+ 
+        .form-control,
+        .form-select {
+            background: var(--input-bg) !important;
+            border: 1px solid var(--input-border) !important;
+            border-radius: 10px;
+            padding: 10px 14px;
+            font-size: 0.875rem;
+            font-family: 'DM Sans', sans-serif;
+            color: #ffffff !important;
+            transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+            margin-bottom: 0;
+        }
+ 
+        .form-control::placeholder { color: rgba(255,255,255,0.25); }
+ 
+        .form-control:focus,
+        .form-select:focus {
+            background: rgba(255,255,255,0.09) !important;
+            border-color: var(--red) !important;
+            box-shadow: 0 0 0 3px var(--input-focus) !important;
+            outline: none;
+            color: #fff !important;
+        }
+ 
+        .form-select option {
+            background: #1a1a1a;
+            color: #fff;
+        }
+ 
+        /* Date input calendar icon color fix */
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: invert(1) opacity(0.4);
+            cursor: pointer;
+        }
+ 
+        /* File input */
+        input[type="file"].form-control {
+            padding: 8px 14px;
+            color: rgba(255,255,255,0.5) !important;
+            cursor: pointer;
+        }
+        input[type="file"]::file-selector-button {
+            background: rgba(224,32,32,0.18);
+            border: 1px solid rgba(224,32,32,0.4);
+            color: rgba(255,255,255,0.75);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-right: 10px;
+            transition: background 0.2s;
+        }
+        input[type="file"]::file-selector-button:hover {
+            background: rgba(224,32,32,0.3);
+        }
+ 
+        /* ── Field groups ── */
+        .field-group { margin-bottom: 14px; }
+        .field-group .row { --bs-gutter-x: 10px; }
 
         .input-white {
             background: #ffffff !important;
