@@ -8,8 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     
     <style>
-        body {
-            :root {
+         :root {
             --red: #e02020;
             --red-dark: #b01515;
             --red-glow: rgba(224, 32, 32, 0.35);
@@ -24,17 +23,18 @@
         }
  
         * { box-sizing: border-box; margin: 0; padding: 0; }
-            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
-                        url('<?= base_url("assets/img/river.jpg") ?>'); 
+         body {
+            background: linear-gradient(160deg, rgba(0,0,0,0.82) 0%, rgba(10,4,2,0.78) 100%),
+                        url('<?= base_url("assets/img/river.jpg") ?>');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
-            font-family: 'Inter', sans-serif;
-            height: 100vh;
+            font-family: 'DM Sans', sans-serif;
+            min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0;
+            padding: 30px 16px;
         }
 
         .glass-card {
