@@ -23,7 +23,8 @@
         }
  
         * { box-sizing: border-box; margin: 0; padding: 0; }
-         body {
+
+          body {
             background: linear-gradient(160deg, rgba(0,0,0,0.82) 0%, rgba(10,4,2,0.78) 100%),
                         url('<?= base_url("assets/img/river.jpg") ?>');
             background-size: cover;
@@ -36,17 +37,67 @@
             justify-content: center;
             padding: 30px 16px;
         }
+ 
+        /* Ambient glow orbs */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -120px; left: -120px;
+            width: 400px; height: 400px;
+            background: radial-gradient(circle, rgba(224,32,32,0.12) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        body::after {
+            content: '';
+            position: fixed;
+            bottom: -100px; right: -100px;
+            width: 350px; height: 350px;
+            background: radial-gradient(circle, rgba(224,32,32,0.08) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+        }
+ 
+        .card-wrapper {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 520px;
+            animation: slideUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+            opacity: 0;
+            transform: translateY(24px);
+        }
+ 
+        @keyframes slideUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+ 
+        /* Decorative top accent line */
+        .card-wrapper::before {
+            content: '';
+            display: block;
+            height: 3px;
+            width: 70px;
+            background: linear-gradient(90deg, var(--red), transparent);
+            margin: 0 auto 0 30px;
+            border-radius: 2px;
+            margin-bottom: -1px;
+        }
 
         .glass-card {
-            background: rgba(25, 25, 25, 0.65); 
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 24px;
-            padding: 30px 40px;
-            width: 100%;
-            max-width: 500px; 
-            box-shadow: 0 25px 50px rgba(0,0,0,0.6);
+            background: var(--glass-bg);
+            backdrop-filter: blur(28px);
+            -webkit-backdrop-filter: blur(28px);
+            border: 1px solid var(--glass-border);
+            border-top: 1px solid rgba(255,255,255,0.13);
+            border-radius: 20px;
+            padding: 36px 40px 32px;
+            box-shadow: 
+                0 32px 64px rgba(0,0,0,0.7),
+                0 0 0 1px rgba(255,255,255,0.04) inset,
+                0 1px 0 rgba(255,255,255,0.1) inset;
             color: white;
         }
 
