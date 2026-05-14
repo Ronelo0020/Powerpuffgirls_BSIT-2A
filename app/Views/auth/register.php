@@ -9,6 +9,21 @@
     
     <style>
         body {
+            :root {
+            --red: #e02020;
+            --red-dark: #b01515;
+            --red-glow: rgba(224, 32, 32, 0.35);
+            --glass-bg: rgba(10, 8, 6, 0.72);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --input-bg: rgba(255, 255, 255, 0.06);
+            --input-border: rgba(255, 255, 255, 0.12);
+            --input-focus: rgba(224, 32, 32, 0.4);
+            --label-color: rgba(255, 255, 255, 0.45);
+            --text-muted: rgba(255, 255, 255, 0.35);
+            --cream: #f5ede0;
+        }
+ 
+        * { box-sizing: border-box; margin: 0; padding: 0; }
             background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
                         url('<?= base_url("assets/img/river.jpg") ?>'); 
             background-size: cover;
