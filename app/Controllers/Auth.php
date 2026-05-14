@@ -224,39 +224,39 @@ public function update($id) {
 
 public function forgot_password() {
     return view('auth/forgot_password');
-}public function resetProcess() 
+}
+public function resetProcess() 
 {
-    // 1. Mas maayo gamiton ang service('session') para sigurado nga active ang session
     $session = \Config\Services::session(); 
     $model = new \App\Models\User_model();
 
-    // 2. Kuhaon ang data halin sa form
-    $email   = $this->request->getPost('email');
-    $newPass = $this->request->getPost('new_password');
+    // 1. Kuhaon ang data halin sa form (lakip na ang birthdate)
+    $email     = $this->request->getPost('email');
+    $birthdate = $this->request->getPost('birthdate'); // Bag-o nga security layer
+    $newPass   = $this->request->getPost('new_password');
 
-    // 3. Pangitaon ang user base sa email
-    $user = $model->where('email', $email)->first();
+    // 2. Pangitaon ang user base sa email KAG birthdate
+    $user = $model->where('email', $email)
+                  ->where('birthdate', $birthdate)
+                  ->first();
 
     if ($user) {
-        // 4. I-hash ang bag-o nga password
+        // 3. I-hash ang bag-o nga password para secure
         $hashedPassword = password_hash($newPass, PASSWORD_DEFAULT);
         
-        // 5. I-update ang database gamit ang ID sang user
-        if ($model->update($user['id'], ['password' => $hashedPassword])) {
-            
-            // Success! Gamiton ang setFlashdata para sa 'msg'
-            $session->setFlashdata('msg', 'Password updated successfully for ' . esc($user['name']));
-            
-            // I-redirect gid sa auth/manage para makita ang table kag alert
-            return redirect()->to(base_url('auth/manage'));
-        } else {
-            // Kon may error sa database update
-            $session->setFlashdata('error', 'Failed to update password. Please try again.');
-            return redirect()->back();
-        }
+        // 4. I-update ang database gamit ang ID sang user
+      if ($model->update($user['id'], ['password' => $hashedPassword])) {
+    // Success: I-set ang message
+    $session->setFlashdata('msg', 'Security Verified. Password updated for ' . esc($user['name']));
+    return redirect()->to(base_url('auth/login'));
+} else {
+    // Failed: Pwede ka maghimo sang lain nga flashdata key
+    $session->setFlashdata('error', 'Failed to update. Please try again.');
+    return redirect()->back();
+}
     } else {
-        // 6. Kon wala ang email sa record
-        $session->setFlashdata('error', 'The email address "' . esc($email) . '" was not found.');
+        // 5. Kon indi mag-match ang email kag birthdate (Security Block)
+        $session->setFlashdata('msg', 'Verification failed. Email or Birthdate is incorrect.');
         return redirect()->back()->withInput(); 
     }
 }

@@ -9,7 +9,6 @@
     
     <style>
         body { 
-            /* Background image halin sa imo assets folder */
             background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
                         url('<?= base_url("assets/img/river.jpg") ?>'); 
             background-size: cover;
@@ -37,13 +36,21 @@
             color: white;
         }
 
-        /* Ginhimo nga white ang text kag dugang opacity para aesthetic */
         .instruction-text {
             color: #ffffff !important;
             font-size: 0.85rem;
             opacity: 0.8;
             font-weight: 400;
             line-height: 1.5;
+        }
+
+        .form-label-sm {
+            display: block;
+            text-align: left;
+            font-size: 0.75rem;
+            margin-bottom: 5px;
+            padding-left: 5px;
+            color: rgba(255,255,255,0.8);
         }
 
         .form-control { 
@@ -94,23 +101,29 @@
 
     <div class="glass-card">
         <h3 class="fw-bold mb-2">
-            <span style="color: #ff0000;">Reset</span> <span style="color: #fff;">Password</span>
+            <span style="color: #ff0000;">Secure</span> <span style="color: #fff;">Reset</span>
         </h3>
         
         <p class="instruction-text mb-4">
-            Enter your email and new password to update your account.
+            Please verify your identity by providing your registered birthdate.
         </p>
 
-        <?php if(session()->getFlashdata('msg')): ?>
-            <div class="alert alert-light py-2 small fw-bold text-danger">
-                <?= session()->getFlashdata('msg') ?>
-            </div>
-        <?php endif; ?>
+       <?php if(session()->getFlashdata('msg')): ?>
+    <div class="alert alert-light py-2 small fw-bold text-success border-success">
+        <?= session()->getFlashdata('msg') ?>
+    </div>
+<?php endif; ?>
 
         <form action="<?= base_url('auth/resetProcess') ?>" method="POST">
             <?= csrf_field() ?>
+            
             <input type="email" name="email" class="form-control" placeholder="Your Registered Email" required>
+            
+            <label class="form-label-sm">Confirm Birthdate:</label>
+            <input type="date" name="birthdate" class="form-control" required>
+            
             <input type="password" name="new_password" class="form-control" placeholder="New Password" required>
+            
             <button type="submit" class="btn btn-reset">UPDATE PASSWORD</button>
         </form>
         
